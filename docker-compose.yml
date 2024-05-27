@@ -1,0 +1,27 @@
+﻿version: '3.8'
+
+services:
+#  webapi:
+#    build:
+#      context: .
+#      dockerfile: src/WebAPI/Dockerfile
+#    ports:
+#      - "8080:80"
+#    environment:
+#      - ASPNETCORE_ENVIRONMENT=Development
+#      - ConnectionStrings__DefaultConnection=Server=db;Database=SalesDb;User=sa;Password=Pass@word;
+#    depends_on:
+#      - db
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Pass@word
+    ports:
+      - "1433:1433"
+    volumes:
+      - BizFlowDb:/var/opt/mssql
+
+volumes:
+  BizFlowDb:
