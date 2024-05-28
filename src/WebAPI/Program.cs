@@ -45,9 +45,11 @@
 //
 // app.Run();
 
+using Application;
 using Application.Interfaces;
 using Application.Services;
 using Core.Interfaces;
+using Infrastructure;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -73,9 +75,12 @@ public abstract class Program
 
                         services.AddControllers();
                         
-                        services.AddScoped<ICustomerRepository, CustomerRepository>();
-                        services.AddScoped<ICustomerService, CustomerService>();
+                        // services.AddScoped<ICustomerRepository, CustomerRepository>();
+                        // services.AddScoped<ICustomerService, CustomerService>();
 
+                        services.AddApplicationServices();
+                        services.AddInfrastructureServices();
+                        
                         if (context.HostingEnvironment.IsDevelopment())
                         {
                             services.AddSwaggerGen(c =>

@@ -1,12 +1,12 @@
 using Core.Entities;
 
-namespace Core.Interfaces;
+namespace Application.Interfaces;
 
-public interface ISaleRepository
+public interface ISaleService
 {
     Task<IEnumerable<Sale>> GetAllAsync();
     Task<Sale?> GetByIdAsync(Guid id);
-    Task<Sale> AddAsync(Sale sale);
-    Task<Sale> UpdateAsync(Sale sale);
+    Task AddAsync(Sale sale);
+    Task UpdateAsync(Sale sale);
     Task DeleteAsync(Guid id);
 }
