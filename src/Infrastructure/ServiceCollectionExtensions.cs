@@ -6,12 +6,11 @@ namespace Infrastructure;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+    public static void AddInfrastructureServices(this IServiceCollection services)
     {
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<ISaleRepository, SaleRepository>();
         services.AddScoped<ISaleItemRepository, SaleItemRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
-        return services;
     }
 }

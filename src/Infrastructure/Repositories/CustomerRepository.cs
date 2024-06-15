@@ -1,5 +1,6 @@
 using Core.Entities;
 using Core.Interfaces;
+using Core.Models.Customer;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,7 +8,7 @@ namespace Infrastructure.Repositories;
 
 public class CustomerRepository(AppDbContext appDbContext) : ICustomerRepository
 {
-    public async Task<IEnumerable<Customer?>> GetAllAsync()
+    public async Task<IEnumerable<Customer>> GetAllAsync()
     {
         return await appDbContext.Customers.ToListAsync();
     }
@@ -17,10 +18,13 @@ public class CustomerRepository(AppDbContext appDbContext) : ICustomerRepository
         return await appDbContext.Customers.FirstOrDefaultAsync(x => x.CustomerId == id);
     }
 
-    public async Task<Customer> AddAsync(Customer customer)
+    public async Task<Customer> AddAsync(CustomerRequest customerRequest)
     {
+        var customer = customerRequest.MapToCustomer();
+
         await appDbContext.Customers.AddAsync(customer);
         await appDbContext.SaveChangesAsync();
+        
         return customer;
     }
 
@@ -39,5 +43,11 @@ public class CustomerRepository(AppDbContext appDbContext) : ICustomerRepository
             appDbContext.Customers.Remove(customer);
             await appDbContext.SaveChangesAsync();
         }
+    }
+
+    public async Task<Customer?> GetByEmailAsync(string? customerEmail)
+    {
+        var customer = await appDbContext.Customers.FirstOrDefaultAsync(x => x.Email == customerEmail);
+        return customer;
     }
 }

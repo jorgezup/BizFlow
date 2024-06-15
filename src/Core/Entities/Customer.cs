@@ -1,23 +1,27 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Core.Entities;
 
-public class Customer(
-    Guid customerId,
-    string name,
-    string email,
-    string phoneNumber,
-    string address,
-    List<DayOfWeek> preferredDay,
-    List<Product> preferredProducts,
-    List<Sale> sales)
+public class Customer
 {
-    public Guid CustomerId { get; set; } = customerId;
-    public string Name { get; set; } = name;
-    public string Email { get; set; } = email;
-    public string PhoneNumber { get; set; } = phoneNumber;
-    public string Address { get; set; } = address;
-    public List<DayOfWeek> PreferredDay { get; set; } = preferredDay;
-    public List<Product> PreferredProducts { get; set; } = preferredProducts;
-    public List<Sale> Sales { get; set; } = sales;
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow; 
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    [Column(TypeName = "unique identifier")]
+    public required Guid CustomerId { get; init; }
+    
+    [Column(TypeName = "varchar(200)")]
+    public required string Name { get; set; }
+    
+    [Column(TypeName = "varchar(200)")]
+    public required string Email { get; set; }
+    
+    [Column(TypeName = "varchar(30)")]
+    public string? PhoneNumber { get; set; }
+    
+    [Column(TypeName = "varchar(200)")]
+    public string? Address { get; set; }
+    public List<DayOfWeek>? PreferredDay { get; set; }
+    public List<string>? PreferredProducts { get; set; }
+    
+    // public List<Sale>? Sales { get; set; } = [];
+    public DateTime CreatedAt { get; init; }
+    public DateTime UpdatedAt { get; set; }
 }
