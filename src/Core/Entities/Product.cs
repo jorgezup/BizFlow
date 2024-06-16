@@ -1,12 +1,23 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Core.Entities;
 
-public class Product(Guid productId, string name, decimal price, string category, List<SaleItem> saleItems)
+public class Product
 {
-    public Guid ProductId { get; set; } = productId;
-    public string Name { get; set; } = name;
-    public decimal Price { get; set; } = price;
-    public string Category { get; set; } = category;
-    public List<SaleItem> SaleItems { get; set; } = saleItems;
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow; 
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    [Column(TypeName = "unique identifier")]
+    public Guid ProductId { get; init; }
+
+    [Column(TypeName = "varchar(200)")] 
+    public required string Name { get; set; }
+
+    [Column(TypeName = "decimal(18,2)")] 
+    public required decimal Price { get; set; }
+
+    [Column(TypeName = "varchar(200)")] 
+    public string? Category { get; set; }
+    
+    // public List<SaleItem> SaleItems { get; set; } = [];
+    
+    public DateTime CreatedAt { get; init; }
+    public DateTime UpdatedAt { get; set; }
 }
