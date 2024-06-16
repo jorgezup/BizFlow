@@ -10,7 +10,7 @@ public class CustomerRequest(
 {
     public string? Name { get; } = name;
 
-    public string? Email { get; } = email;
+    public string Email { get; } = email;
 
     public string? PhoneNumber { get; } = phoneNumber;
 

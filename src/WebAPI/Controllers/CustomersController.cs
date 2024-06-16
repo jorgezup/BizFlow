@@ -12,7 +12,6 @@ namespace WebAPI.Controllers;
 // [ApiExplorerSettings(GroupName = "Customers")]
 public class CustomersController(ICustomerService customerService) : ControllerBase
 {
-    [MapToApiVersion(1.0)]
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<CustomerResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

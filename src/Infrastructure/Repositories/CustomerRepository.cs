@@ -24,7 +24,7 @@ public class CustomerRepository(AppDbContext appDbContext) : ICustomerRepository
 
         await appDbContext.Customers.AddAsync(customer);
         await appDbContext.SaveChangesAsync();
-        
+
         return customer;
     }
 
@@ -38,14 +38,14 @@ public class CustomerRepository(AppDbContext appDbContext) : ICustomerRepository
     public async Task DeleteAsync(Guid id)
     {
         var customer = await appDbContext.Customers.FindAsync(id);
-        if (customer != null)
+        if (customer is not null)
         {
             appDbContext.Customers.Remove(customer);
             await appDbContext.SaveChangesAsync();
         }
     }
 
-    public async Task<Customer?> GetByEmailAsync(string? customerEmail)
+    public async Task<Customer?> GetByEmailAsync(string customerEmail)
     {
         var customer = await appDbContext.Customers.FirstOrDefaultAsync(x => x.Email == customerEmail);
         return customer;

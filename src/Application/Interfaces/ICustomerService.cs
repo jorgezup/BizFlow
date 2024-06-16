@@ -1,4 +1,3 @@
-using Core.Entities;
 using Core.Models.Customer;
 
 namespace Application.Interfaces;
