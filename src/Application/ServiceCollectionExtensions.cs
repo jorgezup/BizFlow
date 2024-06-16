@@ -1,9 +1,9 @@
 using Application.Interfaces;
 using Application.Services;
-using Application.Validators;
 using Application.Validators.Customer;
-using Core.Entities;
+using Application.Validators.Product;
 using Core.Models.Customer;
+using Core.Models.Product;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,6 +22,8 @@ public static class ServiceCollectionExtensions
         // Add validators
         services.AddScoped<IValidator<CustomerRequest>, CustomerValidator>();
         services.AddScoped<IValidator<CustomerUpdateRequest>, CustomerUpdateValidator>();
-        services.AddScoped<IValidator<Product>, ProductValidator>();
+        
+        services.AddScoped<IValidator<ProductRequest>, ProductValidator>();
+        services.AddScoped<IValidator<ProductUpdateRequest>, ProductUpdateValidator>();
     }
 }
