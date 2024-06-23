@@ -1,0 +1,71 @@
+@startuml
+entity Customer {
+    + CustomerId: Guid [PK]
+    --
+    Name: string
+    Email: string
+    Phone: string
+    Address: string
+    CreatedAt: DateTime
+    UpdatedAt: DateTime
+}
+
+entity Product {
+    + ProductId: Guid [PK]
+    --
+    Name: string
+    Description: string
+    UnitOfMeasure: string
+    Price: decimal
+    CreatedAt: DateTime
+    UpdatedAt: DateTime
+}
+
+entity Sale {
+    + Id: Guid [PK]
+    --
+    CustomerId: Guid [FK]
+    SaleDate: DateTime
+    TotalAmount: decimal
+    Status: string
+    CreatedAt: DateTime
+    UpdatedAt: DateTime
+}
+
+entity SaleDetail {
+    + Id: Guid [PK]
+    --
+    SaleId: Guid [FK]
+    ProductId: Guid [FK]
+    Quantity: decimal
+    UnitPrice: decimal
+    Subtotal: decimal
+    CreatedAt: DateTime
+    UpdatedAt: DateTime
+}
+
+entity PriceHistory {
+    + Id: Guid [PK]
+    --
+    ProductId: Guid [FK]
+    Price: decimal
+    CreatedAt: DateTime
+}
+
+entity CustomerPreferences {
+    + Id: Guid [PK]
+    --
+    CustomerId: Guid [FK]
+    ProductId: Guid [FK]
+    PreferredPurchaseDay: string
+    CreatedAt: DateTime
+    UpdatedAt: DateTime
+}
+
+Customer ||--o{ Sale : "makes"
+Sale ||--o{ SaleDetail : "contains"
+Product ||--o{ SaleDetail : "is part of"
+Product ||--o{ PriceHistory : "has price history"
+Customer ||--o{ CustomerPreferences : "has preferences"
+Product ||--o{ CustomerPreferences : "is preferred by"
+@enduml

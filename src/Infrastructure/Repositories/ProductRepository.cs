@@ -1,6 +1,5 @@
 using Core.Entities;
 using Core.Interfaces;
-using Core.Models.Product;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,24 +14,19 @@ public class ProductRepository(AppDbContext appDbContext) : IProductRepository
 
     public async Task<Product?> GetByIdAsync(Guid id)
     {
-        return await appDbContext.Products.FirstOrDefaultAsync(x => x.ProductId == id);
+        return await appDbContext.Products.FindAsync(id);
     }
 
-    public async Task<Product> AddAsync(ProductRequest productRequest)
+    public async Task AddAsync(Product product)
     {
-        var product = productRequest.MapToProduct();
-        
         await appDbContext.Products.AddAsync(product);
         await appDbContext.SaveChangesAsync();
-        
-        return product;
     }
 
-    public async Task<Product> UpdateAsync(Product product)
+    public async Task UpdateAsync(Product product)
     {
         appDbContext.Products.Update(product);
         await appDbContext.SaveChangesAsync();
-        return product;
     }
 
     public async Task DeleteAsync(Guid id)

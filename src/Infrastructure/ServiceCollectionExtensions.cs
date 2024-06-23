@@ -9,8 +9,6 @@ public static class ServiceCollectionExtensions
     public static void AddInfrastructureServices(this IServiceCollection services)
     {
         services.AddScoped<ICustomerRepository, CustomerRepository>();
-        services.AddScoped<ISaleRepository, SaleRepository>();
-        services.AddScoped<ISaleItemRepository, SaleItemRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
     }
 }

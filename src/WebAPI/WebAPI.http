@@ -1,6 +1,64 @@
 @WebAPI_HostAddress = http://localhost:5105
 
-GET {{WebAPI_HostAddress}}/weatherforecast/
-Accept: application/json
+## Customers
 
-###
+### Retrieve all customers
+GET {{WebAPI_HostAddress}}/api/v1.0/customers
+
+### Retrieve customer by ID
+GET {{WebAPI_HostAddress}}/api/v1.0/customers/{id}
+
+### Add a new customer
+POST {{WebAPI_HostAddress}}/api/v1.0/customers
+Content-Type: application/json
+
+{
+  "Name": "John Doe",
+  "Email": "john.doe@example.com",
+  "PhoneNumber": "1234567890"
+}
+
+### Update an existing customer
+PUT {{WebAPI_HostAddress}}/api/v1.0/customers
+Content-Type: application/json
+
+{
+  "CustomerId": "customer_id_here",
+  "Name": "Updated Name",
+  "Email": "updated.email@example.com",
+  "PhoneNumber": "9876543210"
+}
+
+### Delete a customer by ID
+DELETE {{WebAPI_HostAddress}}/api/v1.0/customers/{id}
+
+## Products
+
+### Retrieve all products
+GET {{WebAPI_HostAddress}}/api/v1.0/products
+
+### Retrieve product by ID
+GET {{WebAPI_HostAddress}}/api/v1.0/products/{id}
+
+### Create a new product
+POST {{WebAPI_HostAddress}}/api/v1.0/products
+Content-Type: application/json
+
+{
+  "Name": "New Product",
+  "Price": 99.99,
+  "Description": "Product description"
+}
+
+### Update an existing product
+PUT {{WebAPI_HostAddress}}/api/v1.0/products/{id}
+Content-Type: application/json
+
+{
+  "Name": "Updated Product",
+  "Price": 129.99,
+  "Description": "Updated product description"
+}
+
+### Delete a product by ID
+DELETE {{WebAPI_HostAddress}}/api/v1.0/products/{id}

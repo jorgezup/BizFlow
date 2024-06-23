@@ -1,4 +1,4 @@
-using Core.Models.Customer;
+using Application.DTOs.Customer;
 using FluentValidation;
 
 namespace Application.Validators.Customer;
@@ -10,9 +10,5 @@ public class CustomerUpdateValidator : AbstractValidator<CustomerUpdateRequest>
         RuleFor(customer => customer.Name)
             .NotEmpty()
             .WithMessage("Customer name is required");
-        RuleFor(customer => customer.Email)
-            .NotEmpty()
-            .EmailAddress()
-            .WithMessage("A valid email address is required");
     }
 }
