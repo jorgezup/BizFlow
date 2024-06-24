@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
 
-[Route("api/v{version:apiVersion}/[controller]")]
+[Route("api/v{version:apiVersion}/products")]
 [ApiController]
-public class ProductsController(
+public class ProductController(
     CreateProduct createProduct,
     GetProductById getProductById,
     GetAllProducts getAllProducts,
@@ -22,16 +22,16 @@ public class ProductsController(
     [ProducesResponseType(typeof(IEnumerable<ProductResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetAllAsync()
+    public async Task<IActionResult> GetAllProducts()
     {
         try
         {
             var productsOutput = await getAllProducts.ExecuteAsync();
             return Ok(productsOutput);
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
-            return NotFound(new { message = e.Message });
+            return NotFound();
         }
         catch (Exception e)
         {
@@ -43,16 +43,20 @@ public class ProductsController(
     [ProducesResponseType(typeof(ProductResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetByIdAsync(Guid id)
+    public async Task<IActionResult> GetProductById(Guid id)
     {
         try
         {
             var productOutput = await getProductById.ExecuteAsync(id);
             return Ok(productOutput);
         }
-        catch (NotFoundException e)
+        catch (BadRequestException e)
         {
-            return NotFound(new { message = e.Message });
+            return BadRequest(new { message = e.Message });
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
         }
         catch (Exception e)
         {
@@ -70,7 +74,7 @@ public class ProductsController(
         try
         {
             var productOutput = await createProduct.ExecuteAsync(product);
-            return Created($"/api/products/{productOutput.ProductId}", productOutput);
+            return CreatedAtAction(nameof(GetProductById), new { id = productOutput.ProductId }, productOutput);
         }
         catch (DataContractValidationException e)
         {
@@ -92,7 +96,7 @@ public class ProductsController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateAsync(Guid id, ProductUpdateRequest request)
+    public async Task<IActionResult> UpdateProduct(Guid id, ProductUpdateRequest request)
     {
         try
         {
@@ -118,19 +122,15 @@ public class ProductsController(
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> DeleteAsync(Guid id)
+    public async Task<IActionResult> DeleteProduct(Guid id)
     {
         try
         {
             var result = await deleteProduct.ExecuteAsync(id);
 
-            if (!result) throw new NotFoundException("Product not found");
+            if (!result) return NotFound();
 
             return NoContent();
-        }
-        catch (NotFoundException e)
-        {
-            return NotFound(new { message = e.Message });
         }
         catch (Exception e)
         {

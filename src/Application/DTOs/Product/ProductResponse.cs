@@ -4,7 +4,7 @@ public record ProductResponse(
     Guid ProductId,
     string Name,
     string? Description,
-    string UnitOfMeasure,
+    string? UnitOfMeasure,
     decimal Price,
-    DateTime UpdatedAt,
-    DateTime CreatedAt);
+    DateTime CreatedAt,
+    DateTime UpdatedAt);

@@ -2,7 +2,7 @@ namespace Application.DTOs.Product;
 
 public class ProductRequest(
     string name,
-    string description,
+    string? description,
     string unitOfMeasure,
     decimal price)
 {

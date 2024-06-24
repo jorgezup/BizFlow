@@ -10,9 +10,8 @@ public static class ProductExtensions
             product.Description,
             product.UnitOfMeasure,
             product.Price,
-            product.UpdatedAt,
-            product.CreatedAt
-        );
+            product.CreatedAt,
+            product.UpdatedAt);
     }
 
     public static Core.Entities.Product MapToProduct(this ProductRequest productRequest)
@@ -32,12 +31,18 @@ public static class ProductExtensions
     public static Core.Entities.Product UpdateProduct(this Core.Entities.Product product,
         ProductUpdateRequest productUpdateRequest)
     {
-        product.Name = productUpdateRequest.Name;
+        product.Name = string.IsNullOrWhiteSpace(productUpdateRequest.Name)
+            ? product.Name
+            : productUpdateRequest.Name;
         product.Description = string.IsNullOrWhiteSpace(productUpdateRequest.Description)
             ? product.Description
             : productUpdateRequest.Description;
-        product.UnitOfMeasure = productUpdateRequest.UnitOfMeasure;
-        product.Price = productUpdateRequest.Price;
+        product.UnitOfMeasure = (string.IsNullOrWhiteSpace(productUpdateRequest.UnitOfMeasure)
+            ? product.UnitOfMeasure
+            : productUpdateRequest.UnitOfMeasure)!;
+        product.Price = (decimal)(productUpdateRequest.Price == 0
+            ? product.Price
+            : productUpdateRequest.Price)!;
         product.UpdatedAt = DateTime.UtcNow;
 
         return product;
