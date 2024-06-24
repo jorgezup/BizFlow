@@ -10,8 +10,8 @@ public static class CustomerExtensions
             customer.Email,
             customer.PhoneNumber,
             customer.Address,
-            customer.UpdatedAt,
-            customer.CreatedAt);
+            customer.CreatedAt,
+            customer.UpdatedAt);
     }
 
     public static Core.Entities.Customer MapToCustomer(this CustomerRequest customerRequest)
@@ -31,7 +31,9 @@ public static class CustomerExtensions
     public static Core.Entities.Customer UpdateCustomer(this Core.Entities.Customer customer,
         CustomerUpdateRequest customerUpdateRequest)
     {
-        customer.Name = customerUpdateRequest.Name;
+        customer.Name = string.IsNullOrWhiteSpace(customerUpdateRequest.Name)
+            ? customer.Name
+            : customerUpdateRequest.Name;
         customer.Email = string.IsNullOrWhiteSpace(customerUpdateRequest.Email)
             ? customer.Email
             : customerUpdateRequest.Email;

@@ -1,4 +1,5 @@
 using Application.UseCases.Customer;
+using Application.UseCases.PriceHistory;
 using Application.UseCases.Product;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,5 +14,8 @@ public static class ServiceCollectionExtensions
 
         // Product
         services.AddProductUseCases();
+        
+        // PriceHistory
+        services.AddPriceHistoryUseCases();
     }
 }

@@ -4,5 +4,5 @@ namespace Application.UseCases.Customer.GetById;
 
 public interface IGetCustomerById
 {
-    public Task<CustomerResponse?> ExecuteAsync(Guid id);
+    public Task<CustomerResponse> ExecuteAsync(Guid id);
 }

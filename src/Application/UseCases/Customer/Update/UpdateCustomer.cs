@@ -7,7 +7,7 @@ namespace Application.UseCases.Customer.Update;
 
 public class UpdateCustomer(
     ICustomerRepository customerRepository,
-    IValidator<CustomerUpdateRequest> validatorUpdateRequest) : IUpdateCustomer
+    IValidator<CustomerUpdateRequest> validator) : IUpdateCustomer
 {
     public async Task<CustomerResponse> ExecuteAsync(Guid id, CustomerUpdateRequest request)
     {
@@ -17,17 +17,20 @@ public class UpdateCustomer(
 
         if (!string.IsNullOrWhiteSpace(request.Email))
         {
+            var validationResult = await validator.ValidateAsync(request);
+            if (!validationResult.IsValid)
+                throw new DataContractValidationException("Invalid customer data when updating",
+                    validationResult.Errors);
+            
             var checkEmail = await customerRepository.GetByEmailAsync(request.Email);
-            if (checkEmail is not null && checkEmail.CustomerId != customerFound.CustomerId)
-                throw new ConflictException("Email already in use when updating");
-        }
+            if (checkEmail is not null)
+            {
+                if ( checkEmail.CustomerId != customerFound.CustomerId)
+                    throw new ConflictException("Email already in use when updating");
+                
+            }
 
-        // var validationResult = await validatorUpdateRequest.ValidateAsync(request);
-        //
-        // if (!validationResult.IsValid)
-        // {
-        //     throw new DataContractValidationException("Invalid customer data when updating", validationResult.Errors);
-        // }
+        }
 
         var customerToUpdate = customerFound.UpdateCustomer(request);
 

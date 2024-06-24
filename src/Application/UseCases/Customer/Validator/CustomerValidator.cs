@@ -1,11 +1,11 @@
 using Application.DTOs.Customer;
 using FluentValidation;
 
-namespace Application.Validators.Customer;
+namespace Application.UseCases.Customer.Validator;
 
-public class CustomerUpdateValidator : AbstractValidator<CustomerUpdateRequest>
+public class CustomerValidator : AbstractValidator<CustomerRequest>
 {
-    public CustomerUpdateValidator()
+    public CustomerValidator()
     {
         RuleFor(customer => customer.Name)
             .NotEmpty()

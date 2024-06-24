@@ -11,9 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebAPI.Controllers;
 
 [ApiVersion("1.0")]
-[Route("api/v{version:apiVersion}/[controller]")]
+[Route("/api/v{version:apiVersion}/customers")]
 [ApiController]
-public class CustomersController(
+public class CustomerController(
     UpdateCustomer updateCustomer,
     DeleteCustomer deleteCustomer,
     CreateCustomer createCustomer,
@@ -24,16 +24,16 @@ public class CustomersController(
     [ProducesResponseType(typeof(IEnumerable<CustomerResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetAllAsync()
+    public async Task<IActionResult> GetAllCustomers()
     {
         try
         {
             var customersOutput = await getAllCustomers.ExecuteAsync();
             return Ok(customersOutput);
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
-            return NotFound(new { message = e.Message });
+            return NotFound();
         }
         catch (Exception e)
         {
@@ -45,16 +45,20 @@ public class CustomersController(
     [ProducesResponseType(typeof(CustomerResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetByIdAsync(Guid id)
+    public async Task<IActionResult> GetCustomerById(Guid id)
     {
         try
         {
-            var customerOutput = await getCustomerById.ExecuteAsync(id);
-            return Ok(customerOutput);
+            var response = await getCustomerById.ExecuteAsync(id);
+            return Ok(response);
         }
-        catch (NotFoundException e)
+        catch (BadRequestException e)
         {
-            return NotFound(new { message = e.Message });
+            return BadRequest(new { message = e.Message });
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
         }
         catch (Exception e)
         {
@@ -67,12 +71,12 @@ public class CustomersController(
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> AddAsync(CustomerRequest customer)
+    public async Task<IActionResult> CreateCustomer(CustomerRequest customer)
     {
         try
         {
-            var customerOutput = await createCustomer.ExecuteAsync(customer);
-            return Created($"/api/customers/{customerOutput.CustomerId}", customerOutput);
+            var response = await createCustomer.ExecuteAsync(customer);
+            return CreatedAtAction(nameof(GetCustomerById), new { id = response.CustomerId }, response);
         }
         catch (DataContractValidationException e)
         {
@@ -95,20 +99,20 @@ public class CustomersController(
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateAsync(CustomerUpdateRequest customer)
+    public async Task<IActionResult> UpdateCustomer(Guid customerId, CustomerUpdateRequest customer)
     {
         try
         {
-            var updatedCustomer = await updateCustomer.ExecuteAsync(customer.CustomerId, customer);
+            var updatedCustomer = await updateCustomer.ExecuteAsync(customerId, customer);
             return Ok(updatedCustomer);
         }
         catch (ConflictException e)
         {
             return Conflict(new { message = e.Message });
         }
-        catch (NotFoundException e)
+        catch (NotFoundException)
         {
-            return NotFound(new { message = e.Message });
+            return NotFound();
         }
         catch (DataContractValidationException e)
         {
@@ -125,19 +129,15 @@ public class CustomersController(
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> DeleteAsync(Guid id)
+    public async Task<IActionResult> DeleteCustomer(Guid id)
     {
         try
         {
             var result = await deleteCustomer.ExecuteAsync(id);
 
-            if (!result) throw new NotFoundException("Customer not found");
+            if (!result) return NotFound();
 
             return NoContent();
-        }
-        catch (NotFoundException e)
-        {
-            return NotFound(new { message = e.Message });
         }
         catch (Exception e)
         {

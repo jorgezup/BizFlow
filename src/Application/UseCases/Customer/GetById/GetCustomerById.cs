@@ -6,7 +6,7 @@ namespace Application.UseCases.Customer.GetById;
 
 public class GetCustomerById(ICustomerRepository customerRepository) : IGetCustomerById
 {
-    public async Task<CustomerResponse?> ExecuteAsync(Guid id)
+    public async Task<CustomerResponse> ExecuteAsync(Guid id)
     {
         var customer = await customerRepository.GetByIdAsync(id);
 
