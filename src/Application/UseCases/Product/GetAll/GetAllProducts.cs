@@ -1,5 +1,4 @@
 using Application.DTOs.Product;
-using Application.UseCases.Product.GetById;
 using Core.Exceptions;
 using Core.Interfaces;
 

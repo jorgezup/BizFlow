@@ -1,6 +1,6 @@
 using Application.DTOs.Product;
 
-namespace Application.UseCases.Product.GetById;
+namespace Application.UseCases.Product.GetAll;
 
 public interface IGetAllProducts
 {

@@ -1,13 +1,12 @@
 using Application.DTOs.Product;
 using Core.Exceptions;
 using Core.Interfaces;
-using FluentValidation;
 
 namespace Application.UseCases.Product.Update;
 
 public class UpdateProduct(
     IProductRepository productRepository,
-    IValidator<ProductUpdateRequest> validatorUpdateRequest) : IUpdateProduct
+    IPriceHistoryRepository priceHistoryRepository) : IUpdateProduct
 {
     public async Task<ProductResponse> ExecuteAsync(Guid productId, ProductUpdateRequest productUpdateRequest)
     {
@@ -15,15 +14,23 @@ public class UpdateProduct(
 
         if (existingProduct is null) throw new NotFoundException("Product not found");
 
-        // var validationResult = await validatorUpdateRequest.ValidateAsync(productUpdateRequest);
-        //
-        // if (!validationResult.IsValid)
-        // {
-        //     throw new DataContractValidationException("Invalid product data", validationResult.Errors);
-        // }
+        if (productUpdateRequest.Price is < 0 or 0) throw new BadRequestException("Price cannot be negative");
+
+        if (existingProduct.Price != productUpdateRequest.Price)
+        {
+            var priceHistory = new Core.Entities.PriceHistory
+            {
+                ProductId = productId,
+                Price = (decimal)productUpdateRequest.Price!
+            };
+
+            await priceHistoryRepository.AddAsync(priceHistory);
+        }
 
         var productToUpdate = existingProduct.UpdateProduct(productUpdateRequest);
+
         await productRepository.UpdateAsync(productToUpdate);
+
         return productToUpdate.MapToProductOutput();
     }
 }

@@ -5,7 +5,10 @@ using FluentValidation;
 
 namespace Application.UseCases.Product.Create;
 
-public class CreateProduct(IProductRepository productRepository, IValidator<ProductRequest> validator) : ICreateProduct
+public class CreateProduct(
+    IProductRepository productRepository,
+    IPriceHistoryRepository priceHistoryRepository,
+    IValidator<ProductRequest> validator) : ICreateProduct
 {
     public async Task<ProductResponse> ExecuteAsync(ProductRequest request)
     {
@@ -18,7 +21,18 @@ public class CreateProduct(IProductRepository productRepository, IValidator<Prod
         if (existingProduct is not null) throw new ConflictException("Product name already in use");
 
         var product = request.MapToProduct();
+
+        var priceHistory = new Core.Entities.PriceHistory
+        {
+            ProductId = product.ProductId,
+            Price = product.Price
+        };
+
         await productRepository.AddAsync(product);
+        
+        // Add price history
+        await priceHistoryRepository.AddAsync(priceHistory);
+
         return product.MapToProductOutput();
     }
 }
