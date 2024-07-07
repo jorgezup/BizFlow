@@ -5,11 +5,11 @@ using FluentValidation;
 
 namespace Application.UseCases.CustomerPreferences.Create;
 
-public class CreateCustomerPreferences(
+public class CreateCustomerPreferencesUseCase(
     ICustomerPreferencesRepository customerPreferencesRepository,
     IValidator<CustomerPreferencesRequest> validator,
     ICustomerRepository customerRepository,
-    IProductRepository productRepository) : ICreateCustomerPreferences
+    IProductRepository productRepository) : ICreateCustomerPreferencesUseCase
 {
     public async Task<CustomerPreferencesResponse> ExecuteAsync(CustomerPreferencesRequest request)
     {

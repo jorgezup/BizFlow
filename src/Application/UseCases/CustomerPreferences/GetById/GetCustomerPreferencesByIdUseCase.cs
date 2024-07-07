@@ -4,7 +4,7 @@ using Core.Interfaces;
 
 namespace Application.UseCases.CustomerPreferences.GetById;
 
-public class GetCustomerPreferencesById(ICustomerPreferencesRepository customerPreferencesRepository) : IGetCustomerPreferencesById
+public class GetCustomerPreferencesByIdUseCase(ICustomerPreferencesRepository customerPreferencesRepository) : IGetCustomerPreferencesByIdUseCase
 {
     public async Task<CustomerPreferencesResponse> ExecuteAsync(Guid id)
     {

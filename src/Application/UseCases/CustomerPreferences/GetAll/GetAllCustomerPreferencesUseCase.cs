@@ -3,8 +3,8 @@ using Core.Interfaces;
 
 namespace Application.UseCases.CustomerPreferences.GetAll;
 
-public class GetAllCustomerPreferences(ICustomerPreferencesRepository customerPreferencesRepository)
-    : IGetAllCustomerPreferences
+public class GetAllCustomerPreferencesUseCase(ICustomerPreferencesRepository customerPreferencesRepository)
+    : IGetAllCustomerPreferencesUseCase
 {
     public async Task<IEnumerable<CustomerPreferencesResponse>> ExecuteAsync()
     {

@@ -14,11 +14,11 @@ namespace WebAPI.Controllers;
 [ApiController]
 [Route("api/v{version:apiVersion}/customer-preferences")]
 public class CustomerPreferencesController(
-    CreateCustomerPreferences createCustomerPreferences,
-    GetCustomerPreferencesById getCustomerPreferencesById,
-    UpdateCustomerPreferences updateCustomerPreferences,
-    DeleteCustomerPreferences deleteCustomerPreferences,
-    GetAllCustomerPreferences getAllCustomerPreferences)
+    CreateCustomerPreferencesUseCase createCustomerPreferencesUseCase,
+    GetCustomerPreferencesByIdUseCase getCustomerPreferencesByIdUseCase,
+    UpdateCustomerPreferencesUseCase updateCustomerPreferencesUseCase,
+    DeleteCustomerPreferencesUseCase deleteCustomerPreferencesUseCase,
+    GetAllCustomerPreferencesUseCase getAllCustomerPreferencesUseCase)
     : ControllerBase
 {
     [HttpPost]
@@ -30,7 +30,7 @@ public class CustomerPreferencesController(
     {
         try
         {
-            var response = await createCustomerPreferences.ExecuteAsync(request);
+            var response = await createCustomerPreferencesUseCase.ExecuteAsync(request);
             return CreatedAtAction(nameof(GetCustomerPreferencesById), new { id = response.Id }, response);
         }
         catch (NotFoundException)
@@ -55,7 +55,7 @@ public class CustomerPreferencesController(
     {
         try
         {
-            var response = await getAllCustomerPreferences.ExecuteAsync();
+            var response = await getAllCustomerPreferencesUseCase.ExecuteAsync();
             return Ok(response);
         }
         catch (NotFoundException)
@@ -76,7 +76,7 @@ public class CustomerPreferencesController(
     {
         try
         {
-            var response = await getCustomerPreferencesById.ExecuteAsync(id);
+            var response = await getCustomerPreferencesByIdUseCase.ExecuteAsync(id);
             return Ok(response);
         }
         catch (NotFoundException)
@@ -97,7 +97,7 @@ public class CustomerPreferencesController(
     {
         try
         {
-            var response = await updateCustomerPreferences.ExecuteAsync(id, request);
+            var response = await updateCustomerPreferencesUseCase.ExecuteAsync(id, request);
             return Ok(response);
         }
         catch (NotFoundException)
@@ -118,7 +118,7 @@ public class CustomerPreferencesController(
     {
         try
         {
-            var success = await deleteCustomerPreferences.ExecuteAsync(id);
+            var success = await deleteCustomerPreferencesUseCase.ExecuteAsync(id);
             if (!success) return NotFound();
             return NoContent();
         }

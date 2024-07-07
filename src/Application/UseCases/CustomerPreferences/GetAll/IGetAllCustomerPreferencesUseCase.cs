@@ -2,7 +2,7 @@ using Application.DTOs.CustomerPreferences;
 
 namespace Application.UseCases.CustomerPreferences.GetAll;
 
-public interface IGetAllCustomerPreferences
+public interface IGetAllCustomerPreferencesUseCase
 {
     public Task<IEnumerable<CustomerPreferencesResponse>> ExecuteAsync();
 }

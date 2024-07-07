@@ -17,12 +17,12 @@ public static class ServiceCollectionExtensions
         // Add Validators
         services.AddScoped<IValidator<CustomerPreferencesRequest>, CustomerPreferencesValidator>();
         services.AddScoped<IValidator<UpdateCustomerPreferencesRequest>, UpdateCustomerPreferencesValidator>();
-        
+
         // Add UseCases
-        services.AddScoped<CreateCustomerPreferences>();
-        services.AddScoped<GetAllCustomerPreferences>();
-        services.AddScoped<GetCustomerPreferencesById>();
-        services.AddScoped<UpdateCustomerPreferences>();
-        services.AddScoped<DeleteCustomerPreferences>();
+        services.AddScoped<IGetAllCustomerPreferencesUseCase, GetAllCustomerPreferencesUseCase>();
+        services.AddScoped<IGetCustomerPreferencesByIdUseCase, GetCustomerPreferencesByIdUseCase>();
+        services.AddScoped<IUpdateCustomerPreferencesUseCase, UpdateCustomerPreferencesUseCase>();
+        services.AddScoped<ICreateCustomerPreferencesUseCase, CreateCustomerPreferencesUseCase>();
+        services.AddScoped<IDeleteCustomerPreferencesUseCase, DeleteCustomerPreferencesUseCase>();
     }
 }

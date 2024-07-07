@@ -3,7 +3,7 @@ using Core.Interfaces;
 
 namespace Application.UseCases.CustomerPreferences.Delete;
 
-public class DeleteCustomerPreferences(ICustomerPreferencesRepository customerPreferencesRepository) : IDeleteCustomerPreferences
+public class DeleteCustomerPreferencesUseCase(ICustomerPreferencesRepository customerPreferencesRepository) : IDeleteCustomerPreferencesUseCase
 {
     public async Task<bool> ExecuteAsync(Guid id)
     {

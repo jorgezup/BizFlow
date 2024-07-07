@@ -5,9 +5,9 @@ using FluentValidation;
 
 namespace Application.UseCases.CustomerPreferences.Update;
 
-public class UpdateCustomerPreferences(
+public class UpdateCustomerPreferencesUseCase(
     ICustomerPreferencesRepository customerPreferencesRepository,
-    IValidator<UpdateCustomerPreferencesRequest> validator) : IUpdateCustomerPreferences
+    IValidator<UpdateCustomerPreferencesRequest> validator) : IUpdateCustomerPreferencesUseCase
 {
     public async Task<CustomerPreferencesResponse?> ExecuteAsync(Guid id, UpdateCustomerPreferencesRequest request)
     {
