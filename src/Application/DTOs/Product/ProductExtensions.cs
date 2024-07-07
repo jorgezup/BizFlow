@@ -5,7 +5,7 @@ public static class ProductExtensions
     public static ProductResponse MapToProductOutput(this Core.Entities.Product product)
     {
         return new ProductResponse(
-            product.ProductId,
+            product.Id,
             product.Name,
             product.Description,
             product.UnitOfMeasure,
@@ -18,7 +18,7 @@ public static class ProductExtensions
     {
         return new Core.Entities.Product
         {
-            ProductId = Guid.NewGuid(),
+            Id = Guid.NewGuid(),
             Name = productRequest.Name,
             Description = productRequest.Description ?? string.Empty,
             UnitOfMeasure = productRequest.UnitOfMeasure,

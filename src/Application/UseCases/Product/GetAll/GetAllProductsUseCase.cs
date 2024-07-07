@@ -4,7 +4,7 @@ using Core.Interfaces;
 
 namespace Application.UseCases.Product.GetAll;
 
-public class GetAllProducts(IProductRepository productRepository) : IGetAllProducts
+public class GetAllProductsUseCase(IProductRepository productRepository) : IGetAllProductsUseCase
 {
     public async Task<IEnumerable<ProductResponse>> ExecuteAsync()
     {

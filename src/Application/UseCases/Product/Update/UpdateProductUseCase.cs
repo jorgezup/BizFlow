@@ -4,9 +4,9 @@ using Core.Interfaces;
 
 namespace Application.UseCases.Product.Update;
 
-public class UpdateProduct(
+public class UpdateProductUseCase(
     IProductRepository productRepository,
-    IPriceHistoryRepository priceHistoryRepository) : IUpdateProduct
+    IPriceHistoryRepository priceHistoryRepository) : IUpdateProductUseCase
 {
     public async Task<ProductResponse> ExecuteAsync(Guid productId, ProductUpdateRequest productUpdateRequest)
     {

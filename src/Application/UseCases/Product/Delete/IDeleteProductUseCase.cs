@@ -1,6 +1,6 @@
 namespace Application.UseCases.Product.Delete;
 
-public interface IDeleteProduct
+public interface IDeleteProductUseCase
 {
     public Task<bool> ExecuteAsync(Guid productId);
 }

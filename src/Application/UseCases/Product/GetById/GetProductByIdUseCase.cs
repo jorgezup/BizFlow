@@ -4,7 +4,7 @@ using Core.Interfaces;
 
 namespace Application.UseCases.Product.GetById;
 
-public class GetProductById(IProductRepository productRepository) : IGetProductById
+public class GetProductByIdUseCase(IProductRepository productRepository) : IGetProductByIdUseCase
 {
     public async Task<ProductResponse?> ExecuteAsync(Guid id)
     {

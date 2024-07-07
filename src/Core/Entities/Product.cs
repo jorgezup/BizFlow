@@ -4,7 +4,7 @@ namespace Core.Entities;
 
 public class Product
 {
-    public Guid ProductId { get; init; }
+    public Guid Id { get; init; }
     [Column(TypeName = "varchar(200)")] public required string Name { get; set; }
     [Column(TypeName = "varchar(200)")] public string? Description { get; set; }
     [Column(TypeName = "varchar(200)")] public required string UnitOfMeasure { get; set; }
@@ -12,5 +12,5 @@ public class Product
     public DateTime UpdatedAt { get; set; }
     public DateTime CreatedAt { get; init; }
     
-    public List<PriceHistory> PriceHistories { get; set; } = [];
+    public List<PriceHistory> PriceHistories { get; init; } = [];
 }

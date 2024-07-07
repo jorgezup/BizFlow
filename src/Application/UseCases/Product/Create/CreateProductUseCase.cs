@@ -5,10 +5,10 @@ using FluentValidation;
 
 namespace Application.UseCases.Product.Create;
 
-public class CreateProduct(
+public class CreateProductUseCase(
     IProductRepository productRepository,
     IPriceHistoryRepository priceHistoryRepository,
-    IValidator<ProductRequest> validator) : ICreateProduct
+    IValidator<ProductRequest> validator) : ICreateProductUseCase
 {
     public async Task<ProductResponse> ExecuteAsync(ProductRequest request)
     {
@@ -24,7 +24,7 @@ public class CreateProduct(
 
         var priceHistory = new Core.Entities.PriceHistory
         {
-            ProductId = product.ProductId,
+            ProductId = product.Id,
             Price = product.Price
         };
 

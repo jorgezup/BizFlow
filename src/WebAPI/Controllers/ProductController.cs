@@ -12,11 +12,11 @@ namespace WebAPI.Controllers;
 [Route("api/v{version:apiVersion}/products")]
 [ApiController]
 public class ProductController(
-    CreateProduct createProduct,
-    GetProductById getProductById,
-    GetAllProducts getAllProducts,
-    UpdateProduct updateProduct,
-    DeleteProduct deleteProduct) : ControllerBase
+    CreateProductUseCase createProductUseCase,
+    GetProductByIdUseCase getProductByIdUseCase,
+    GetAllProductsUseCase getAllProductsUseCase,
+    UpdateProductUseCase updateProductUseCase,
+    DeleteProductUseCase deleteProductUseCase) : ControllerBase
 {
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<ProductResponse>), StatusCodes.Status200OK)]
@@ -26,7 +26,7 @@ public class ProductController(
     {
         try
         {
-            var productsOutput = await getAllProducts.ExecuteAsync();
+            var productsOutput = await getAllProductsUseCase.ExecuteAsync();
             return Ok(productsOutput);
         }
         catch (NotFoundException)
@@ -47,7 +47,7 @@ public class ProductController(
     {
         try
         {
-            var productOutput = await getProductById.ExecuteAsync(id);
+            var productOutput = await getProductByIdUseCase.ExecuteAsync(id);
             return Ok(productOutput);
         }
         catch (BadRequestException e)
@@ -73,7 +73,7 @@ public class ProductController(
     {
         try
         {
-            var productOutput = await createProduct.ExecuteAsync(product);
+            var productOutput = await createProductUseCase.ExecuteAsync(product);
             return CreatedAtAction(nameof(GetProductById), new { id = productOutput.ProductId }, productOutput);
         }
         catch (DataContractValidationException e)
@@ -100,7 +100,7 @@ public class ProductController(
     {
         try
         {
-            var updatedCustomer = await updateProduct.ExecuteAsync(id, request);
+            var updatedCustomer = await updateProductUseCase.ExecuteAsync(id, request);
             return Ok(updatedCustomer);
         }
         catch (NotFoundException e)
@@ -126,7 +126,7 @@ public class ProductController(
     {
         try
         {
-            var result = await deleteProduct.ExecuteAsync(id);
+            var result = await deleteProductUseCase.ExecuteAsync(id);
 
             if (!result) return NotFound();
 

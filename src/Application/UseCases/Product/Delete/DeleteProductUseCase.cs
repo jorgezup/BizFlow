@@ -3,7 +3,7 @@ using Core.Interfaces;
 
 namespace Application.UseCases.Product.Delete;
 
-public class DeleteProduct(IProductRepository productRepository) : IDeleteProduct
+public class DeleteProductUseCase(IProductRepository productRepository) : IDeleteProductUseCase
 {
     public async Task<bool> ExecuteAsync(Guid productId)
     {
