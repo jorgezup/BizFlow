@@ -1,4 +1,5 @@
 using Core.Interfaces;
+using Infrastructure.Persistence;
 using Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,5 +13,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IPriceHistoryRepository, PriceHistoryRepository>();
         services.AddScoped<ICustomerPreferencesRepository, CustomerPreferencesRepository>();
+        services.AddScoped<ISaleRepository, SaleRepository>();
+        services.AddScoped<ISaleDetailRepository, SaleDetailRepository>();
+        
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }
