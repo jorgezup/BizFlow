@@ -11,9 +11,10 @@ public static class ServiceCollectionExtensions
     public static void AddPriceHistoryUseCases(this IServiceCollection services)
     {
         // Add UseCases
-        services.AddScoped<CreatePriceHistory>();
-        services.AddScoped<GetPriceHistoryById>();
-        services.AddScoped<UpdatePriceHistory>();
-        services.AddScoped<DeletePriceHistory>();
+        // services.AddScoped<IGetAllPriceHistoriesUseCase, GetAllPriceHistoriesUseCase>();
+        services.AddScoped<IGetPriceHistoryByIdUseCase, GetPriceHistoryByIdUseCase>();
+        services.AddScoped<IUpdatePriceHistoryUseCase, UpdatePriceHistoryUseCase>();
+        services.AddScoped<ICreatePriceHistoryUseCase, CreatePriceHistoryUseCase>();
+        services.AddScoped<IDeletePriceHistoryUseCase, DeletePriceHistoryUseCase>();
     }
 }

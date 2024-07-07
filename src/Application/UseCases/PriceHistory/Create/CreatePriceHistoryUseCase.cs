@@ -3,7 +3,7 @@ using Core.Interfaces;
 
 namespace Application.UseCases.PriceHistory.Create;
 
-public class CreatePriceHistory(IPriceHistoryRepository priceHistoryRepository) : ICreatePriceHistory
+public class CreatePriceHistoryUseCase(IPriceHistoryRepository priceHistoryRepository) : ICreatePriceHistoryUseCase
 {
     public async Task<PriceHistoryResponse> ExecuteAsync(PriceHistoryRequest request)
     {

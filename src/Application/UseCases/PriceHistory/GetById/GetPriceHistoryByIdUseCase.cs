@@ -4,7 +4,7 @@ using Core.Interfaces;
 
 namespace Application.UseCases.PriceHistory.GetById;
 
-public class GetPriceHistoryById(IPriceHistoryRepository priceHistoryRepository) : IPriceHistoryGetById
+public class GetPriceHistoryByIdUseCase(IPriceHistoryRepository priceHistoryRepository) : IGetPriceHistoryByIdUseCase
 {
     public async Task<PriceHistoryResponse> ExecuteAsync(Guid id)
     {

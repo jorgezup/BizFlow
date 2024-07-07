@@ -4,7 +4,7 @@ using Core.Interfaces;
 
 namespace Application.UseCases.PriceHistory.Update;
 
-public class UpdatePriceHistory(IPriceHistoryRepository priceHistoryRepository) : IUpdatePriceHistory
+public class UpdatePriceHistoryUseCase(IPriceHistoryRepository priceHistoryRepository) : IUpdatePriceHistoryUseCase
 {
     public async Task<PriceHistoryResponse> ExecuteAsync(Guid id, UpdatePriceHistoryRequest request)
     {

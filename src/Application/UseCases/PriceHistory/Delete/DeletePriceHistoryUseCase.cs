@@ -3,7 +3,7 @@ using Core.Interfaces;
 
 namespace Application.UseCases.PriceHistory.Delete;
 
-public class DeletePriceHistory(IPriceHistoryRepository priceHistoryRepository) : IDeletePriceHistory
+public class DeletePriceHistoryUseCase(IPriceHistoryRepository priceHistoryRepository) : IDeletePriceHistoryUseCase
 {
     public async Task<bool> ExecuteAsync(Guid id)
     {

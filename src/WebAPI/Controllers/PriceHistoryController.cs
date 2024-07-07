@@ -13,10 +13,10 @@ namespace WebAPI.Controllers;
 [Route("/api/v{version:apiVersion}/price-histories")]
 [ApiController]
 public class PriceHistoryController(
-    CreatePriceHistory createPriceHistory,
-    GetPriceHistoryById getPriceHistoryById,
-    UpdatePriceHistory updatePriceHistory,
-    DeletePriceHistory deletePriceHistory)
+    CreatePriceHistoryUseCase createPriceHistoryUseCase,
+    GetPriceHistoryByIdUseCase getPriceHistoryByIdUseCase,
+    UpdatePriceHistoryUseCase updatePriceHistoryUseCase,
+    DeletePriceHistoryUseCase deletePriceHistoryUseCase)
     : ControllerBase
 {
     [HttpPost]
@@ -27,7 +27,7 @@ public class PriceHistoryController(
     {
         try
         {
-            var response = await createPriceHistory.ExecuteAsync(request);
+            var response = await createPriceHistoryUseCase.ExecuteAsync(request);
             return CreatedAtAction(nameof(GetPriceHistoryById), new { id = response.Id }, response);
         }
         catch (BadRequestException e)
@@ -49,7 +49,7 @@ public class PriceHistoryController(
     {
         try
         {
-            var response = await getPriceHistoryById.ExecuteAsync(id);
+            var response = await getPriceHistoryByIdUseCase.ExecuteAsync(id);
             return Ok(response);
         }
         catch (BadRequestException e)
@@ -75,7 +75,7 @@ public class PriceHistoryController(
     {
         try
         {
-            var response = await updatePriceHistory.ExecuteAsync(id, request);
+            var response = await updatePriceHistoryUseCase.ExecuteAsync(id, request);
             return Ok(response);
         }
         catch (BadRequestException e)
@@ -101,7 +101,7 @@ public class PriceHistoryController(
     {
         try
         {
-            var success = await deletePriceHistory.ExecuteAsync(id);
+            var success = await deletePriceHistoryUseCase.ExecuteAsync(id);
             if (!success) return NotFound();
             return NoContent();
         }

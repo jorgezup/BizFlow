@@ -1,6 +1,6 @@
 @startuml
 entity Customer {
-    + CustomerId: Guid [PK]
+    + Id: Guid [PK]
     --
     Name: string
     Email: string
@@ -11,7 +11,7 @@ entity Customer {
 }
 
 entity Product {
-    + ProductId: Guid [PK]
+    + Id: Guid [PK]
     --
     Name: string
     Description: string
@@ -57,7 +57,7 @@ entity CustomerPreferences {
     --
     CustomerId: Guid [FK]
     ProductId: Guid [FK]
-    PreferredPurchaseDay: string
+    PreferredPurchaseDay: List<string>
     CreatedAt: DateTime
     UpdatedAt: DateTime
 }
