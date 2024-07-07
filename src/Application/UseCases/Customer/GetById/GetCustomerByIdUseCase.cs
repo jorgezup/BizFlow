@@ -4,7 +4,7 @@ using Core.Interfaces;
 
 namespace Application.UseCases.Customer.GetById;
 
-public class GetCustomerById(ICustomerRepository customerRepository) : IGetCustomerById
+public class GetCustomerByIdUseCase(ICustomerRepository customerRepository) : IGetCustomerByIdUseCase
 {
     public async Task<CustomerResponse> ExecuteAsync(Guid id)
     {

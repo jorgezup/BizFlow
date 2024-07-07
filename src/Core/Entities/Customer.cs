@@ -4,7 +4,7 @@ namespace Core.Entities;
 
 public class Customer
 {
-    public required Guid CustomerId { get; init; }
+    public required Guid Id { get; init; }
 
     [Column(TypeName = "varchar(200)")] public required string Name { get; set; }
 

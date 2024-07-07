@@ -2,7 +2,7 @@ using Application.DTOs.Customer;
 
 namespace Application.UseCases.Customer.GetAll;
 
-public interface IGetAllCustomers
+public interface IGetAllCustomersUseCase
 {
     public Task<IEnumerable<CustomerResponse>> ExecuteAsync();
 }

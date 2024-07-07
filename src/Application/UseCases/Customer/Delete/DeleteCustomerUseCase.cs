@@ -2,7 +2,7 @@ using Core.Interfaces;
 
 namespace Application.UseCases.Customer.Delete;
 
-public class DeleteCustomer(ICustomerRepository customerRepository) : IDeleteCustomer
+public class DeleteCustomerUseCase(ICustomerRepository customerRepository) : IDeleteCustomerUseCase
 {
     public async Task<bool> ExecuteAsync(Guid id)
     {

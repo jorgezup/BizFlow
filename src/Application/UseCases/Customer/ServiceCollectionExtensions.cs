@@ -17,13 +17,12 @@ public static class ServiceCollectionExtensions
         // Add Validators
         services.AddScoped<IValidator<CustomerRequest>, CustomerValidator>();
         services.AddScoped<IValidator<CustomerUpdateRequest>, CustomerUpdateValidator>();
-        
+
         // Add UseCases
-        services.AddScoped<CreateCustomer>();
-        services.AddScoped<GetAllCustomers>();
-        services.AddScoped<GetCustomerById>();
-        services.AddScoped<UpdateCustomer>();
-        services.AddScoped<DeleteCustomer>();
-        
+        services.AddScoped<IGetAllCustomersUseCase, GetAllCustomersUseCase>();
+        services.AddScoped<IGetCustomerByIdUseCase, GetCustomerByIdUseCase>();
+        services.AddScoped<IUpdateCustomerUseCase, UpdateCustomerUseCase>();
+        services.AddScoped<ICreateCustomerUseCase, CreateCustomerUseCase>();
+        services.AddScoped<IDeleteCustomerUseCase, DeleteCustomerUseCase>();
     }
 }

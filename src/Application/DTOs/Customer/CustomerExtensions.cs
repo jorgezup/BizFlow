@@ -5,7 +5,7 @@ public static class CustomerExtensions
     public static CustomerResponse MapToCustomerResponse(this Core.Entities.Customer customer)
     {
         return new CustomerResponse(
-            customer.CustomerId,
+            customer.Id,
             customer.Name,
             customer.Email,
             customer.PhoneNumber,
@@ -18,7 +18,7 @@ public static class CustomerExtensions
     {
         return new Core.Entities.Customer
         {
-            CustomerId = Guid.NewGuid(),
+            Id = Guid.NewGuid(),
             Name = customerRequest.Name,
             Email = customerRequest.Email ?? string.Empty,
             PhoneNumber = customerRequest.PhoneNumber ?? string.Empty,

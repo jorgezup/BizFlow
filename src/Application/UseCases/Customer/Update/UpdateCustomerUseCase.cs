@@ -5,9 +5,9 @@ using FluentValidation;
 
 namespace Application.UseCases.Customer.Update;
 
-public class UpdateCustomer(
+public class UpdateCustomerUseCase(
     ICustomerRepository customerRepository,
-    IValidator<CustomerUpdateRequest> validator) : IUpdateCustomer
+    IValidator<CustomerUpdateRequest> validator) : IUpdateCustomerUseCase
 {
     public async Task<CustomerResponse> ExecuteAsync(Guid id, CustomerUpdateRequest request)
     {
@@ -25,11 +25,10 @@ public class UpdateCustomer(
             var checkEmail = await customerRepository.GetByEmailAsync(request.Email);
             if (checkEmail is not null)
             {
-                if ( checkEmail.CustomerId != customerFound.CustomerId)
+                if ( checkEmail.Id != customerFound.Id)
                     throw new ConflictException("Email already in use when updating");
                 
             }
-
         }
 
         var customerToUpdate = customerFound.UpdateCustomer(request);

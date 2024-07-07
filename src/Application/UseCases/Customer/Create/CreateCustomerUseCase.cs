@@ -5,9 +5,9 @@ using FluentValidation;
 
 namespace Application.UseCases.Customer.Create;
 
-public class CreateCustomer(
+public class CreateCustomerUseCase(
     ICustomerRepository customerRepository,
-    IValidator<CustomerRequest> validator) : ICreateCustomer
+    IValidator<CustomerRequest> validator) : ICreateCustomerUseCase
 {
     public async Task<CustomerResponse> ExecuteAsync(CustomerRequest request)
     {

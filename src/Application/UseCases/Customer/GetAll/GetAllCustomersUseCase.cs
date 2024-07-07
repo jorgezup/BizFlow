@@ -4,7 +4,7 @@ using Core.Interfaces;
 
 namespace Application.UseCases.Customer.GetAll;
 
-public class GetAllCustomers(ICustomerRepository customerRepository) : IGetAllCustomers
+public class GetAllCustomersUseCase(ICustomerRepository customerRepository) : IGetAllCustomersUseCase
 {
     public async Task<IEnumerable<CustomerResponse>> ExecuteAsync()
     {

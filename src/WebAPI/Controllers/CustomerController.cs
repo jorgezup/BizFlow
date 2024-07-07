@@ -14,11 +14,11 @@ namespace WebAPI.Controllers;
 [Route("/api/v{version:apiVersion}/customers")]
 [ApiController]
 public class CustomerController(
-    UpdateCustomer updateCustomer,
-    DeleteCustomer deleteCustomer,
-    CreateCustomer createCustomer,
-    GetCustomerById getCustomerById,
-    GetAllCustomers getAllCustomers) : ControllerBase
+    UpdateCustomerUseCase updateCustomerUseCase,
+    DeleteCustomerUseCase deleteCustomerUseCase,
+    CreateCustomerUseCase createCustomerUseCase,
+    GetCustomerByIdUseCase getCustomerByIdUseCase,
+    GetAllCustomersUseCase getAllCustomersUseCase) : ControllerBase
 {
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<CustomerResponse>), StatusCodes.Status200OK)]
@@ -28,7 +28,7 @@ public class CustomerController(
     {
         try
         {
-            var customersOutput = await getAllCustomers.ExecuteAsync();
+            var customersOutput = await getAllCustomersUseCase.ExecuteAsync();
             return Ok(customersOutput);
         }
         catch (NotFoundException)
@@ -49,7 +49,7 @@ public class CustomerController(
     {
         try
         {
-            var response = await getCustomerById.ExecuteAsync(id);
+            var response = await getCustomerByIdUseCase.ExecuteAsync(id);
             return Ok(response);
         }
         catch (BadRequestException e)
@@ -75,7 +75,7 @@ public class CustomerController(
     {
         try
         {
-            var response = await createCustomer.ExecuteAsync(customer);
+            var response = await createCustomerUseCase.ExecuteAsync(customer);
             return CreatedAtAction(nameof(GetCustomerById), new { id = response.CustomerId }, response);
         }
         catch (DataContractValidationException e)
@@ -103,7 +103,7 @@ public class CustomerController(
     {
         try
         {
-            var updatedCustomer = await updateCustomer.ExecuteAsync(customerId, customer);
+            var updatedCustomer = await updateCustomerUseCase.ExecuteAsync(customerId, customer);
             return Ok(updatedCustomer);
         }
         catch (ConflictException e)
@@ -133,7 +133,7 @@ public class CustomerController(
     {
         try
         {
-            var result = await deleteCustomer.ExecuteAsync(id);
+            var result = await deleteCustomerUseCase.ExecuteAsync(id);
 
             if (!result) return NotFound();
 
