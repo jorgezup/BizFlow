@@ -33,6 +33,6 @@ public class CreateProductUseCase(
         // Add price history
         await priceHistoryRepository.AddAsync(priceHistory);
 
-        return product.MapToProductOutput();
+        return product.MapToProductResponse();
     }
 }

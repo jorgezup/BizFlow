@@ -3,7 +3,7 @@ using Core.Interfaces;
 
 namespace Application.UseCases.PriceHistory.Create;
 
-public class CreatePriceHistoryUseCase(IPriceHistoryRepository priceHistoryRepository) : ICreatePriceHistoryUseCase
+public class CreatePriceHistoryUseCase(IUnitOfWork unitOfWork) : ICreatePriceHistoryUseCase
 {
     public async Task<PriceHistoryResponse> ExecuteAsync(PriceHistoryRequest request)
     {
@@ -13,8 +13,19 @@ public class CreatePriceHistoryUseCase(IPriceHistoryRepository priceHistoryRepos
             Price = request.Price
         };
 
-        await priceHistoryRepository.AddAsync(priceHistory);
+        await unitOfWork.BeginTransactionAsync();
 
-        return priceHistory.MapToPriceHistoryResponse();
+        try
+        {
+            await unitOfWork.PriceHistoryRepository.AddAsync(priceHistory);
+            await unitOfWork.CommitTransactionAsync();
+
+            return priceHistory.MapToPriceHistoryResponse();
+        }
+        catch (Exception ex)
+        {
+            await unitOfWork.RollbackTransactionAsync();
+            throw new ApplicationException("An error occurred while creating price history", ex);
+        }
     }
 }

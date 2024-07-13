@@ -8,4 +8,7 @@ public interface IUnitOfWork : IDisposable
     ISaleDetailRepository SaleDetailRepository { get; }
     IProductRepository ProductRepository { get; }
     ISaleRepository SaleRepository { get; }
+    ICustomerRepository CustomerRepository { get; }
+    ICustomerPreferencesRepository CustomerPreferencesRepository { get; }
+    IPriceHistoryRepository PriceHistoryRepository { get; }
 }

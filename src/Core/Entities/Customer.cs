@@ -13,6 +13,9 @@ public class Customer
     [Column(TypeName = "varchar(30)")] public string? PhoneNumber { get; set; }
 
     [Column(TypeName = "varchar(200)")] public string? Address { get; set; }
-    public DateTime UpdatedAt { get; set; }
+
     public DateTime CreatedAt { get; init; }
+    public DateTime UpdatedAt { get; set; }
+
+    public List<CustomerPreferences> CustomerPreferences { get; init; } = null!;
 }

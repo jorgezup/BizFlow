@@ -2,16 +2,18 @@ using Application.DTOs.Product;
 using Core.Exceptions;
 using Core.Interfaces;
 
-namespace Application.UseCases.Product.GetById;
-
-public class GetProductByIdUseCase(IProductRepository productRepository) : IGetProductByIdUseCase
+namespace Application.UseCases.Product.GetById
 {
-    public async Task<ProductResponse?> ExecuteAsync(Guid id)
+    public class GetProductByIdUseCase(IUnitOfWork unitOfWork) : IGetProductByIdUseCase
     {
-        var product = await productRepository.GetByIdAsync(id);
+        public async Task<ProductResponse?> ExecuteAsync(Guid id)
+        {
+            var product = await unitOfWork.ProductRepository.GetByIdAsync(id);
 
-        if (product is null) throw new NotFoundException("Product not found");
+            if (product is null)
+                throw new NotFoundException("Product not found");
 
-        return product.MapToProductOutput();
+            return product.MapToProductResponse();
+        }
     }
 }

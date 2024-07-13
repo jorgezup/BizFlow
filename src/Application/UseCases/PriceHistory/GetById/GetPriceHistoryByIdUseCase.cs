@@ -4,13 +4,14 @@ using Core.Interfaces;
 
 namespace Application.UseCases.PriceHistory.GetById;
 
-public class GetPriceHistoryByIdUseCase(IPriceHistoryRepository priceHistoryRepository) : IGetPriceHistoryByIdUseCase
+public class GetPriceHistoryByIdUseCase(IUnitOfWork unitOfWork) : IGetPriceHistoryByIdUseCase
 {
     public async Task<PriceHistoryResponse> ExecuteAsync(Guid id)
     {
-        var priceHistory = await priceHistoryRepository.GetByIdAsync(id);
+        var priceHistory = await unitOfWork.PriceHistoryRepository.GetByIdAsync(id);
 
-        if (priceHistory is null) throw new NotFoundException("Price history not found");
+        if (priceHistory is null)
+            throw new NotFoundException("Price history not found");
 
         return priceHistory.MapToPriceHistoryResponse();
     }

@@ -2,7 +2,7 @@ namespace Application.DTOs.Product;
 
 public static class ProductExtensions
 {
-    public static ProductResponse MapToProductOutput(this Core.Entities.Product product)
+    public static ProductResponse MapToProductResponse(this Core.Entities.Product product)
     {
         return new ProductResponse(
             product.Id,

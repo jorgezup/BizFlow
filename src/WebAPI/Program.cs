@@ -1,8 +1,10 @@
 using System.Text.Json;
 using Application;
 using Asp.Versioning;
+using Core.Interfaces;
 using Infrastructure;
 using Infrastructure.Data;
+using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 

@@ -9,4 +9,5 @@ public interface ICustomerPreferencesRepository
     Task AddAsync(CustomerPreferences customerPreferences);
     Task UpdateAsync(CustomerPreferences customerPreferences);
     Task DeleteAsync(Guid id);
+    Task<IEnumerable<CustomerPreferences>> GetByCustomerIdAsync(Guid customerId);
 }

@@ -6,37 +6,44 @@ using FluentValidation;
 namespace Application.UseCases.CustomerPreferences.Create;
 
 public class CreateCustomerPreferencesUseCase(
-    ICustomerPreferencesRepository customerPreferencesRepository,
-    IValidator<CustomerPreferencesRequest> validator,
-    ICustomerRepository customerRepository,
-    IProductRepository productRepository) : ICreateCustomerPreferencesUseCase
+    IUnitOfWork unitOfWork,
+    IValidator<CustomerPreferencesRequest> validator)
+    : ICreateCustomerPreferencesUseCase
 {
     public async Task<CustomerPreferencesResponse> ExecuteAsync(CustomerPreferencesRequest request)
     {
         var validationResult = await validator.ValidateAsync(request);
-        
+
+        if (!validationResult.IsValid)
+            throw new DataContractValidationException("Invalid customer preferences data when creating", validationResult.Errors);
+
         var customerAndProductExists = await CustomerAndProductExistsAsync(request.CustomerId, request.ProductId);
-        
+
         if (!customerAndProductExists)
             throw new NotFoundException("Customer or product not found");
-        
-        if (!validationResult.IsValid)
-            throw new DataContractValidationException("Invalid customer preferences data when creating",
-                validationResult.Errors);
 
         var customerPreferences = request.MapToCustomerPreferences();
 
-        await customerPreferencesRepository.AddAsync(customerPreferences);
+        await unitOfWork.BeginTransactionAsync();
 
-        return customerPreferences.MapToCustomerPreferencesResponse();
+        try
+        {
+            await unitOfWork.CustomerPreferencesRepository.AddAsync(customerPreferences);
+            await unitOfWork.CommitTransactionAsync();
+
+            return customerPreferences.MapToCustomerPreferencesResponse();
+        }
+        catch (Exception ex)
+        {
+            await unitOfWork.RollbackTransactionAsync();
+            throw new ApplicationException("An error occurred while creating customer preferences", ex);
+        }
     }
 
-    private async Task<bool> CustomerAndProductExistsAsync(Guid requestCustomerId, Guid requestProductId)
+    private async Task<bool> CustomerAndProductExistsAsync(Guid customerId, Guid productId)
     {
-        var customerExists = await customerRepository
-            .GetByIdAsync(requestCustomerId);
-        var productExists = await productRepository
-            .GetByIdAsync(requestProductId);
-        return customerExists is not null && productExists is not null;
+        var customerExists = await unitOfWork.CustomerRepository.GetByIdAsync(customerId);
+        var productExists = await unitOfWork.ProductRepository.GetByIdAsync(productId);
+        return customerExists != null && productExists != null;
     }
 }

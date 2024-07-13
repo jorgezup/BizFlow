@@ -26,59 +26,50 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<PriceHistory>()
             .HasKey(p => p.Id);
 
-        // PriceHistory configuration
         // One-to-many relationship between Product and PriceHistory
-        // Product has many PriceHistories
         modelBuilder.Entity<PriceHistory>()
             .HasOne(p => p.Product)
             .WithMany(b => b.PriceHistories)
-            .HasForeignKey(p => p.ProductId);
+            .HasForeignKey(p => p.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         // CustomerPreferences configuration
         modelBuilder.Entity<CustomerPreferences>()
             .HasKey(p => p.Id);
 
-        // CustomerPreferences configuration
         // One-to-many relationship between Customer and CustomerPreferences
-        // Customer has many CustomerPreferences
         modelBuilder.Entity<CustomerPreferences>()
             .HasOne(p => p.Customer)
-            .WithMany()
+            .WithMany(c => c.CustomerPreferences)
             .HasForeignKey(p => p.CustomerId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // CustomerPreferences configuration
         // One-to-many relationship between Product and CustomerPreferences
-        // Product has many CustomerPreferences
         modelBuilder.Entity<CustomerPreferences>()
             .HasOne(p => p.Product)
-            .WithMany()
+            .WithMany(p => p.CustomerPreferences)
             .HasForeignKey(p => p.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         // Sale configuration
         modelBuilder.Entity<Sale>()
             .HasKey(s => s.Id);
-        
+
         // SaleDetail configuration
         modelBuilder.Entity<SaleDetail>()
             .HasKey(s => s.Id);
-        
-        // SaleDetail configuration
+
         // One-to-many relationship between Sale and SaleDetail
-        // Sale has many SaleDetails
         modelBuilder.Entity<SaleDetail>()
             .HasOne(s => s.Sale)
             .WithMany(b => b.SaleDetails)
             .HasForeignKey(s => s.SaleId)
             .OnDelete(DeleteBehavior.Cascade);
-        
-        // SaleDetail configuration
+
         // One-to-many relationship between Product and SaleDetail
-        // Product has many SaleDetails
         modelBuilder.Entity<SaleDetail>()
             .HasOne(s => s.Product)
-            .WithMany()
+            .WithMany(p => p.SaleDetails)
             .HasForeignKey(s => s.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
     }

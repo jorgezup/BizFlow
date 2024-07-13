@@ -20,13 +20,12 @@ public class PriceHistoryRepository(AppDbContext appDbContext) : IPriceHistoryRe
     public async Task AddAsync(PriceHistory priceHistory)
     {
         await appDbContext.PriceHistories.AddAsync(priceHistory);
-        await appDbContext.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(PriceHistory priceHistory)
+    public Task UpdateAsync(PriceHistory priceHistory)
     {
         appDbContext.PriceHistories.Update(priceHistory);
-        await appDbContext.SaveChangesAsync();
+        return Task.CompletedTask;
     }
 
     public async Task DeleteAsync(Guid id)
@@ -35,7 +34,13 @@ public class PriceHistoryRepository(AppDbContext appDbContext) : IPriceHistoryRe
         if (priceHistory != null)
         {
             appDbContext.PriceHistories.Remove(priceHistory);
-            await appDbContext.SaveChangesAsync();
         }
+    }
+
+    public async Task<IEnumerable<PriceHistory>> GetByProductIdAsync(Guid id)
+    {
+        return await appDbContext.PriceHistories
+            .Where(x => x.ProductId == id)
+            .ToListAsync();
     }
 }

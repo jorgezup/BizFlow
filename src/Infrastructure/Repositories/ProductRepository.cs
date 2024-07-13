@@ -20,13 +20,12 @@ public class ProductRepository(AppDbContext appDbContext) : IProductRepository
     public async Task AddAsync(Product product)
     {
         await appDbContext.Products.AddAsync(product);
-        await appDbContext.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(Product product)
+    public Task UpdateAsync(Product product)
     {
         appDbContext.Products.Update(product);
-        await appDbContext.SaveChangesAsync();
+        return Task.CompletedTask;
     }
 
     public async Task DeleteAsync(Guid id)
@@ -35,7 +34,6 @@ public class ProductRepository(AppDbContext appDbContext) : IProductRepository
         if (product is not null)
         {
             appDbContext.Products.Remove(product);
-            await appDbContext.SaveChangesAsync();
         }
     }
 

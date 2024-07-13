@@ -5,9 +5,8 @@ using FluentValidation;
 
 namespace Application.UseCases.Customer.Create;
 
-public class CreateCustomerUseCase(
-    ICustomerRepository customerRepository,
-    IValidator<CustomerRequest> validator) : ICreateCustomerUseCase
+public class CreateCustomerUseCase(IUnitOfWork unitOfWork, IValidator<CustomerRequest> validator)
+    : ICreateCustomerUseCase
 {
     public async Task<CustomerResponse> ExecuteAsync(CustomerRequest request)
     {
@@ -17,13 +16,25 @@ public class CreateCustomerUseCase(
             throw new DataContractValidationException("Invalid customer data when creating",
                 validationResult.Errors);
 
-        var customerFound = await customerRepository.GetByEmailAsync(request.Email);
-        if (customerFound is not null) throw new ConflictException("Email already in use when creating");
+        await unitOfWork.BeginTransactionAsync();
 
-        var customer = request.MapToCustomer();
+        try
+        {
+            var customerFound = await unitOfWork.CustomerRepository.GetByEmailAsync(request.Email);
+            if (customerFound != null)
+                throw new ConflictException("Email already in use when creating");
 
-        await customerRepository.AddAsync(customer);
+            var customer = request.MapToCustomer();
 
-        return customer.MapToCustomerResponse();
+            await unitOfWork.CustomerRepository.AddAsync(customer);
+            await unitOfWork.CommitTransactionAsync();
+
+            return customer.MapToCustomerResponse();
+        }
+        catch (Exception ex)
+        {
+            await unitOfWork.RollbackTransactionAsync();
+            throw new ApplicationException("An error occurred while creating the customer", ex);
+        }
     }
 }

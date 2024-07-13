@@ -3,15 +3,27 @@ using Core.Interfaces;
 
 namespace Application.UseCases.PriceHistory.Delete;
 
-public class DeletePriceHistoryUseCase(IPriceHistoryRepository priceHistoryRepository) : IDeletePriceHistoryUseCase
+public class DeletePriceHistoryUseCase(IUnitOfWork unitOfWork) : IDeletePriceHistoryUseCase
 {
     public async Task<bool> ExecuteAsync(Guid id)
     {
-        var priceHistory = await priceHistoryRepository.GetByIdAsync(id);
+        var priceHistory = await unitOfWork.PriceHistoryRepository.GetByIdAsync(id);
 
-        if (priceHistory == null) throw new NotFoundException("Price history not found");
+        if (priceHistory is null)
+            throw new NotFoundException("Price history not found");
 
-        await priceHistoryRepository.DeleteAsync(id);
-        return true;
+        await unitOfWork.BeginTransactionAsync();
+
+        try
+        {
+            await unitOfWork.PriceHistoryRepository.DeleteAsync(id);
+            await unitOfWork.CommitTransactionAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            await unitOfWork.RollbackTransactionAsync();
+            throw new ApplicationException("An error occurred while deleting price history", ex);
+        }
     }
 }

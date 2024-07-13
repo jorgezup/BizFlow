@@ -9,4 +9,5 @@ public interface IPriceHistoryRepository
     Task AddAsync(PriceHistory priceHistory);
     Task UpdateAsync(PriceHistory priceHistory);
     Task DeleteAsync(Guid id);
+    Task<IEnumerable<PriceHistory>> GetByProductIdAsync(Guid id);
 }

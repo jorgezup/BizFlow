@@ -2,35 +2,45 @@ using Application.DTOs.Product;
 using Core.Exceptions;
 using Core.Interfaces;
 
-namespace Application.UseCases.Product.Update;
-
-public class UpdateProductUseCase(
-    IProductRepository productRepository,
-    IPriceHistoryRepository priceHistoryRepository) : IUpdateProductUseCase
+namespace Application.UseCases.Product.Update
 {
-    public async Task<ProductResponse> ExecuteAsync(Guid productId, ProductUpdateRequest productUpdateRequest)
+    public class UpdateProductUseCase(IUnitOfWork unitOfWork) : IUpdateProductUseCase
     {
-        var existingProduct = await productRepository.GetByIdAsync(productId);
-
-        if (existingProduct is null) throw new NotFoundException("Product not found");
-
-        if (productUpdateRequest.Price is < 0 or 0) throw new BadRequestException("Price cannot be negative");
-
-        if (existingProduct.Price != productUpdateRequest.Price)
+        public async Task<ProductResponse> ExecuteAsync(Guid productId, ProductUpdateRequest productUpdateRequest)
         {
+            var existingProduct = await unitOfWork.ProductRepository.GetByIdAsync(productId);
+
+            if (existingProduct == null)
+                throw new NotFoundException("Product not found");
+
+            if (productUpdateRequest.Price <= 0)
+                throw new BadRequestException("Price must be greater than zero");
+
+            if (existingProduct.Price == productUpdateRequest.Price)
+                throw new ConflictException("Price cannot be the same as the current price");
+
             var priceHistory = new Core.Entities.PriceHistory
             {
                 ProductId = productId,
                 Price = (decimal)productUpdateRequest.Price!
             };
 
-            await priceHistoryRepository.AddAsync(priceHistory);
+            await unitOfWork.BeginTransactionAsync();
+
+            try
+            {
+                await unitOfWork.PriceHistoryRepository.AddAsync(priceHistory);
+                existingProduct.UpdateProduct(productUpdateRequest);
+                await unitOfWork.ProductRepository.UpdateAsync(existingProduct);
+                await unitOfWork.CommitTransactionAsync();
+
+                return existingProduct.MapToProductResponse();
+            }
+            catch (Exception ex)
+            {
+                await unitOfWork.RollbackTransactionAsync();
+                throw new ApplicationException("An error occurred while updating the product", ex);
+            }
         }
-
-        var productToUpdate = existingProduct.UpdateProduct(productUpdateRequest);
-
-        await productRepository.UpdateAsync(productToUpdate);
-
-        return productToUpdate.MapToProductOutput();
     }
 }

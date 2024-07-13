@@ -6,14 +6,16 @@ using FluentValidation;
 namespace Application.UseCases.CustomerPreferences.Update;
 
 public class UpdateCustomerPreferencesUseCase(
-    ICustomerPreferencesRepository customerPreferencesRepository,
-    IValidator<UpdateCustomerPreferencesRequest> validator) : IUpdateCustomerPreferencesUseCase
+    IUnitOfWork unitOfWork,
+    IValidator<UpdateCustomerPreferencesRequest> validator)
+    : IUpdateCustomerPreferencesUseCase
 {
-    public async Task<CustomerPreferencesResponse?> ExecuteAsync(Guid id, UpdateCustomerPreferencesRequest request)
+    public async Task<CustomerPreferencesResponse> ExecuteAsync(Guid id, UpdateCustomerPreferencesRequest request)
     {
-        var customerPreferences = await customerPreferencesRepository.GetByIdAsync(id);
+        var customerPreferences = await unitOfWork.CustomerPreferencesRepository.GetByIdAsync(id);
 
-        if (customerPreferences is null) throw new NotFoundException("Customer preferences not found");
+        if (customerPreferences == null)
+            throw new NotFoundException("Customer preferences not found");
 
         var validationResult = await validator.ValidateAsync(request);
 
@@ -24,8 +26,19 @@ public class UpdateCustomerPreferencesUseCase(
         customerPreferences.PreferredPurchaseDays = request.PreferredPurchaseDays;
         customerPreferences.UpdatedAt = DateTime.UtcNow;
 
-        await customerPreferencesRepository.UpdateAsync(customerPreferences);
+        await unitOfWork.BeginTransactionAsync();
 
-        return customerPreferences.MapToCustomerPreferencesResponse();
+        try
+        {
+            await unitOfWork.CustomerPreferencesRepository.UpdateAsync(customerPreferences);
+            await unitOfWork.CommitTransactionAsync();
+
+            return customerPreferences.MapToCustomerPreferencesResponse();
+        }
+        catch (Exception ex)
+        {
+            await unitOfWork.RollbackTransactionAsync();
+            throw new ApplicationException("An error occurred while updating customer preferences", ex);
+        }
     }
 }

@@ -2,17 +2,19 @@ using Application.DTOs.Product;
 using Core.Exceptions;
 using Core.Interfaces;
 
-namespace Application.UseCases.Product.GetAll;
-
-public class GetAllProductsUseCase(IProductRepository productRepository) : IGetAllProductsUseCase
+namespace Application.UseCases.Product.GetAll
 {
-    public async Task<IEnumerable<ProductResponse>> ExecuteAsync()
+    public class GetAllProductsUseCase(IUnitOfWork unitOfWork) : IGetAllProductsUseCase
     {
-        var products = await productRepository.GetAllAsync();
-        var productsList = products.ToList();
+        public async Task<IEnumerable<ProductResponse>> ExecuteAsync()
+        {
+            var products = await unitOfWork.ProductRepository.GetAllAsync();
+            var productsList = products.ToList();
 
-        if (productsList.Count == 0) throw new NotFoundException("Product not found");
+            if (productsList.Count is 0)
+                throw new NotFoundException("No products found");
 
-        return productsList.Select(c => c.MapToProductOutput());
+            return productsList.Select(c => c.MapToProductResponse());
+        }
     }
 }

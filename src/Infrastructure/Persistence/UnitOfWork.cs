@@ -1,37 +1,56 @@
 using Core.Interfaces;
 using Infrastructure.Data;
-using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Infrastructure.Persistence;
-
-public class UnitOfWork(AppDbContext context, IDbContextTransaction transaction) : IUnitOfWork
+namespace Infrastructure.Persistence
 {
-    public IProductRepository ProductRepository => new ProductRepository(context);
-    public ICustomerRepository CustomerRepository => new CustomerRepository(context);
-    public IPriceHistoryRepository PriceHistoryRepository => new PriceHistoryRepository(context);
-    public ICustomerPreferencesRepository CustomerPreferencesRepository => new CustomerPreferencesRepository(context);
-    public ISaleDetailRepository SaleDetailRepository => new SaleDetailRepository(context);
-    public ISaleRepository SaleRepository => new SaleRepository(context);
-
-    public async Task BeginTransactionAsync()
+    public class UnitOfWork(
+        AppDbContext context,
+        IProductRepository productRepository,
+        ICustomerRepository customerRepository,
+        IPriceHistoryRepository priceHistoryRepository,
+        ICustomerPreferencesRepository customerPreferencesRepository,
+        ISaleRepository saleRepository,
+        ISaleDetailRepository saleDetailRepository)
+        : IUnitOfWork
     {
-        transaction = await context.Database.BeginTransactionAsync();
-    }
+        public IProductRepository ProductRepository { get; } = productRepository;
+        public ICustomerRepository CustomerRepository { get; } = customerRepository;
+        public IPriceHistoryRepository PriceHistoryRepository { get; } = priceHistoryRepository;
+        public ICustomerPreferencesRepository CustomerPreferencesRepository { get; } = customerPreferencesRepository;
+        public ISaleDetailRepository SaleDetailRepository { get; } = saleDetailRepository;
+        public ISaleRepository SaleRepository { get; } = saleRepository;
 
-    public async Task CommitTransactionAsync()
-    {
-        await transaction.CommitAsync();
-    }
+        private IDbContextTransaction? _transaction;
 
-    public async Task RollbackTransactionAsync()
-    {
-        await transaction.RollbackAsync();
-    }
+        public async Task BeginTransactionAsync()
+        {
+            _transaction = await context.Database.BeginTransactionAsync();
+        }
 
-    public void Dispose()
-    {
-        transaction.Dispose();
-        context.Dispose();
+        public async Task CommitTransactionAsync()
+        {
+            try
+            {
+                await context.SaveChangesAsync();
+                await _transaction?.CommitAsync()!;
+            }
+            catch
+            {
+                await _transaction?.RollbackAsync()!;
+                throw;
+            }
+        }
+
+        public async Task RollbackTransactionAsync()
+        {
+            await _transaction?.RollbackAsync()!;
+        }
+
+        public void Dispose()
+        {
+            _transaction?.Dispose();
+            context.Dispose();
+        }
     }
 }

@@ -3,13 +3,11 @@ using Core.Interfaces;
 
 namespace Application.UseCases.CustomerPreferences.GetAll;
 
-public class GetAllCustomerPreferencesUseCase(ICustomerPreferencesRepository customerPreferencesRepository)
-    : IGetAllCustomerPreferencesUseCase
+public class GetAllCustomerPreferencesUseCase(IUnitOfWork unitOfWork) : IGetAllCustomerPreferencesUseCase
 {
     public async Task<IEnumerable<CustomerPreferencesResponse>> ExecuteAsync()
     {
-        var customerPreferences = await customerPreferencesRepository.GetAllAsync();
-
+        var customerPreferences = await unitOfWork.CustomerPreferencesRepository.GetAllAsync();
         return customerPreferences.Select(x => x.MapToCustomerPreferencesResponse());
     }
 }

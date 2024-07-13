@@ -4,14 +4,15 @@ using Core.Interfaces;
 
 namespace Application.UseCases.Customer.GetAll;
 
-public class GetAllCustomersUseCase(ICustomerRepository customerRepository) : IGetAllCustomersUseCase
+public class GetAllCustomersUseCase(IUnitOfWork unitOfWork) : IGetAllCustomersUseCase
 {
     public async Task<IEnumerable<CustomerResponse>> ExecuteAsync()
     {
-        var customers = await customerRepository.GetAllAsync();
+        var customers = await unitOfWork.CustomerRepository.GetAllAsync();
         var customersList = customers.ToList();
 
-        if (customersList.Count == 0) throw new NotFoundException("Customer not found when getting all");
+        if (!customersList.Any())
+            throw new NotFoundException("No customers found");
 
         return customersList.Select(c => c.MapToCustomerResponse());
     }

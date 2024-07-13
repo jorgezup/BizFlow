@@ -10,6 +10,7 @@ public class Sale
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; init; }
 
-    public ICollection<SaleDetail> SaleDetails { get; set; } = null!;
+    public List<SaleDetail> SaleDetails { get; init; } = null!;
+    
     public Customer Customer { get; init; } = null!;
 }

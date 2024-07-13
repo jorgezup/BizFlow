@@ -20,13 +20,12 @@ public class CustomerPreferencesRepository(AppDbContext appDbContext) : ICustome
     public async Task AddAsync(CustomerPreferences customerPreferences)
     {
         await appDbContext.CustomerPreferences.AddAsync(customerPreferences);
-        await appDbContext.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(CustomerPreferences customerPreferences)
+    public Task UpdateAsync(CustomerPreferences customerPreferences)
     {
         appDbContext.CustomerPreferences.Update(customerPreferences);
-        await appDbContext.SaveChangesAsync();
+        return Task.CompletedTask;
     }
 
     public async Task DeleteAsync(Guid id)
@@ -35,7 +34,13 @@ public class CustomerPreferencesRepository(AppDbContext appDbContext) : ICustome
         if (customerPreferences is not null)
         {
             appDbContext.CustomerPreferences.Remove(customerPreferences);
-            await appDbContext.SaveChangesAsync();
         }
+    }
+
+    public async Task<IEnumerable<CustomerPreferences>> GetByCustomerIdAsync(Guid customerId)
+    {
+        return await appDbContext.CustomerPreferences
+            .Where(x => x.CustomerId == customerId)
+            .ToListAsync();
     }
 }

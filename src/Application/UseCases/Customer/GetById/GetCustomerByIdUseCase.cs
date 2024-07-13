@@ -4,13 +4,14 @@ using Core.Interfaces;
 
 namespace Application.UseCases.Customer.GetById;
 
-public class GetCustomerByIdUseCase(ICustomerRepository customerRepository) : IGetCustomerByIdUseCase
+public class GetCustomerByIdUseCase(IUnitOfWork unitOfWork) : IGetCustomerByIdUseCase
 {
     public async Task<CustomerResponse> ExecuteAsync(Guid id)
     {
-        var customer = await customerRepository.GetByIdAsync(id);
+        var customer = await unitOfWork.CustomerRepository.GetByIdAsync(id);
 
-        if (customer is null) throw new NotFoundException("Customer not found when getting");
+        if (customer == null)
+            throw new NotFoundException("Customer not found");
 
         return customer.MapToCustomerResponse();
     }

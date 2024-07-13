@@ -4,18 +4,30 @@ using Core.Interfaces;
 
 namespace Application.UseCases.PriceHistory.Update;
 
-public class UpdatePriceHistoryUseCase(IPriceHistoryRepository priceHistoryRepository) : IUpdatePriceHistoryUseCase
+public class UpdatePriceHistoryUseCase(IUnitOfWork unitOfWork) : IUpdatePriceHistoryUseCase
 {
     public async Task<PriceHistoryResponse> ExecuteAsync(Guid id, UpdatePriceHistoryRequest request)
     {
-        var priceHistory = await priceHistoryRepository.GetByIdAsync(id);
+        var priceHistory = await unitOfWork.PriceHistoryRepository.GetByIdAsync(id);
 
-        if (priceHistory == null) throw new NotFoundException("Price history not found");
+        if (priceHistory == null)
+            throw new NotFoundException("Price history not found");
 
         priceHistory.Price = request.Price;
 
-        await priceHistoryRepository.UpdateAsync(priceHistory);
+        await unitOfWork.BeginTransactionAsync();
 
-        return priceHistory.MapToPriceHistoryResponse();
+        try
+        {
+            await unitOfWork.PriceHistoryRepository.UpdateAsync(priceHistory);
+            await unitOfWork.CommitTransactionAsync();
+
+            return priceHistory.MapToPriceHistoryResponse();
+        }
+        catch (Exception ex)
+        {
+            await unitOfWork.RollbackTransactionAsync();
+            throw new ApplicationException("An error occurred while updating price history", ex);
+        }
     }
 }
