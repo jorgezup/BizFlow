@@ -10,7 +10,7 @@ namespace Application.UseCases.Product.Update
         {
             var existingProduct = await unitOfWork.ProductRepository.GetByIdAsync(productId);
 
-            if (existingProduct == null)
+            if (existingProduct is null)
                 throw new NotFoundException("Product not found");
 
             if (productUpdateRequest.Price <= 0)

@@ -19,10 +19,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<UpdateCustomerPreferencesRequest>, UpdateCustomerPreferencesValidator>();
 
         // Add UseCases
-        services.AddScoped<IGetAllCustomerPreferencesUseCase, GetAllCustomerPreferencesUseCase>();
-        services.AddScoped<IGetCustomerPreferencesByIdUseCase, GetCustomerPreferencesByIdUseCase>();
-        services.AddScoped<IUpdateCustomerPreferencesUseCase, UpdateCustomerPreferencesUseCase>();
-        services.AddScoped<ICreateCustomerPreferencesUseCase, CreateCustomerPreferencesUseCase>();
-        services.AddScoped<IDeleteCustomerPreferencesUseCase, DeleteCustomerPreferencesUseCase>();
+        services.AddScoped<GetAllCustomerPreferencesUseCase>();
+        services.AddScoped<GetCustomerPreferencesByIdUseCase>();
+        services.AddScoped<UpdateCustomerPreferencesUseCase>();
+        services.AddScoped<CreateCustomerPreferencesUseCase>();
+        services.AddScoped<DeleteCustomerPreferencesUseCase>();
     }
 }

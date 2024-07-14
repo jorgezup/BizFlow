@@ -9,7 +9,6 @@ namespace Application.UseCases.Sale.Create;
 
 public class CreateSaleUseCase(
     IUnitOfWork unitOfWork,
-    IGetProductByIdUseCase getProductByIdUseCase,
     IValidator<SaleRequest> validator) : ICreateSaleUseCase
 {
     public async Task<SaleResponse> ExecuteAsync(SaleRequest request)
@@ -29,7 +28,7 @@ public class CreateSaleUseCase(
         {
             foreach (var detailRequest in request.SaleDetails)
             {
-                var product = await getProductByIdUseCase.ExecuteAsync(detailRequest.ProductId);
+                var product = await unitOfWork.ProductRepository.GetByIdAsync(detailRequest.ProductId);
                 if (product is null)
                 {
                     throw new NotFoundException("Product not found");

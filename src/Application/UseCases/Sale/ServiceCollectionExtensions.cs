@@ -18,10 +18,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<SaleRequest>, SaleValidator>();
 
         // Add Use Cases
-        services.AddScoped<ICreateSaleUseCase, CreateSaleUseCase>();
-        services.AddScoped<IDeleteSaleUseCase, DeleteSaleUseCase>();
-        services.AddScoped<IGetAllSalesUseCase, GetAllSalesUseCase>();
-        services.AddScoped<IGetSaleByIdUseCase, GetSaleByIdUseCase>();
-        services.AddScoped<IUpdateSaleUseCase, UpdateSaleUseCase>();
+        services.AddScoped<CreateSaleUseCase>();
+        services.AddScoped<DeleteSaleUseCase>();
+        services.AddScoped<GetAllSalesUseCase>();
+        services.AddScoped<GetSaleByIdUseCase>();
+        services.AddScoped<UpdateSaleUseCase>();
     }
 }

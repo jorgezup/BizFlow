@@ -11,7 +11,7 @@ public class GetAllCustomersUseCase(IUnitOfWork unitOfWork) : IGetAllCustomersUs
         var customers = await unitOfWork.CustomerRepository.GetAllAsync();
         var customersList = customers.ToList();
 
-        if (!customersList.Any())
+        if (customersList.Count == 0)
             throw new NotFoundException("No customers found");
 
         return customersList.Select(c => c.MapToCustomerResponse());

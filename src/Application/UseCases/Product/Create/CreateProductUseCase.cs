@@ -6,8 +6,7 @@ using FluentValidation;
 namespace Application.UseCases.Product.Create;
 
 public class CreateProductUseCase(
-    IProductRepository productRepository,
-    IPriceHistoryRepository priceHistoryRepository,
+    IUnitOfWork unitOfWork,
     IValidator<ProductRequest> validator) : ICreateProductUseCase
 {
     public async Task<ProductResponse> ExecuteAsync(ProductRequest request)
@@ -17,22 +16,35 @@ public class CreateProductUseCase(
         if (!validationResult.IsValid)
             throw new DataContractValidationException("Invalid product data", validationResult.Errors);
 
-        var existingProduct = await productRepository.GetByNameAsync(request.Name);
+        var existingProduct = await unitOfWork.ProductRepository.GetByNameAsync(request.Name);
         if (existingProduct is not null) throw new ConflictException("Product name already in use");
 
-        var product = request.MapToProduct();
-
-        var priceHistory = new Core.Entities.PriceHistory
-        {
-            ProductId = product.Id,
-            Price = product.Price
-        };
-
-        await productRepository.AddAsync(product);
+        await unitOfWork.BeginTransactionAsync();
         
-        // Add price history
-        await priceHistoryRepository.AddAsync(priceHistory);
+        try
+        {
+            var product = request.MapToProduct();
 
-        return product.MapToProductResponse();
+            var priceHistory = new Core.Entities.PriceHistory
+            {
+                ProductId = product.Id,
+                Price = product.Price,
+                Product = product
+            };
+
+            await unitOfWork.ProductRepository.AddAsync(product);
+
+            // Add price history
+            await unitOfWork.PriceHistoryRepository.AddAsync(priceHistory);
+            
+            await unitOfWork.CommitTransactionAsync();
+
+            return product.MapToProductResponse();
+        }
+        catch (Exception e) when (e is not ConflictException and not DataContractValidationException)
+        {
+            await unitOfWork.RollbackTransactionAsync();
+            throw new ApplicationException("An error occurred while creating the product", e);
+        }
     }
 }
