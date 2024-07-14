@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Core.Entities;
 
 public class Sale
@@ -5,12 +7,12 @@ public class Sale
     public Guid Id { get; init; }
     public Guid CustomerId { get; init; }
     public DateTime SaleDate { get; init; }
-    public decimal TotalAmount { get; set; }
-    public required string Status { get; set; }
+    [Column(TypeName = "decimal(18,2)")] public decimal TotalAmount { get; set; }
+    [Column(TypeName = "varchar(20)")] public required string Status { get; set; }
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; init; }
 
-    public List<SaleDetail> SaleDetails { get; init; } = null!;
-    
-    public Customer Customer { get; init; } = null!;
+    public List<SaleDetail> SaleDetails { get; set; }
+
+    public Customer Customer { get; init; }
 }

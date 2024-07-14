@@ -9,7 +9,7 @@ public class CustomerPreferences
     public Guid ProductId { get; init; }
 
     [Column(TypeName = "varchar(200)")]
-    public List<string> PreferredPurchaseDays { get; set; } = new List<string>();
+    public List<string> PreferredPurchaseDays { get; set; } = [];
 
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
