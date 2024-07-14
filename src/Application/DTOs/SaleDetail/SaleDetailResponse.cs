@@ -3,7 +3,7 @@ namespace Application.DTOs.SaleDetail;
 public record SaleDetailResponse(
     Guid Id,
     Guid SaleId,
-    Guid ProductId,
+    string ProductName,
     decimal Quantity,
     decimal UnitPrice,
     decimal Subtotal,

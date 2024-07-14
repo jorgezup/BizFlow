@@ -7,7 +7,7 @@ public static class SaleDetailExtensions
         return new SaleDetailResponse(
             saleDetail.Id,
             saleDetail.SaleId,
-            saleDetail.ProductId,
+            saleDetail.Product.Name,
             saleDetail.Quantity,
             saleDetail.UnitPrice,
             saleDetail.Subtotal,

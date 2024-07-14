@@ -9,5 +9,11 @@ public class SaleDetailRequest
     public decimal Subtotal { get; set; }
 }
 
+public class SaleDetailRequestToSale
+{
+    public Guid ProductId { get; set; }
+    public decimal Quantity { get; set; }
+}
+
     
     
