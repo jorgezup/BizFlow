@@ -2,6 +2,7 @@ using Application.DTOs.SaleDetail;
 using Application.UseCases.SaleDetail.Create;
 using Application.UseCases.SaleDetail.Delete;
 using Application.UseCases.SaleDetail.GetById;
+using Application.UseCases.SaleDetail.GetBySaleId;
 using Application.UseCases.SaleDetail.Update;
 using Asp.Versioning;
 using Core.Exceptions;
@@ -12,15 +13,15 @@ namespace WebAPI.Controllers;
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/sale-details")]
-
 public class SaleDetailController(
     GetSaleDetailByIdUseCase getSaleDetailByIdUseCase,
     // GetAllSaleDetailsUseCase getAllSaleDetailsUseCase,
+    GetSaleDetailBySaleIdUseCase getSaleDetailBySaleIdUseCase,
     CreateSaleDetailUseCase createSaleDetailUseCase,
     UpdateSaleDetailUseCase updateSaleDetailUseCase,
     DeleteSaleDetailUseCase deleteSaleDetailUseCase) : ControllerBase
 {
-    [HttpGet("{id:guid}")] 
+    [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(SaleDetailResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -40,7 +41,7 @@ public class SaleDetailController(
             return StatusCode(StatusCodes.Status500InternalServerError, new { message = e.Message });
         }
     }
-    
+
     // [HttpGet]
     // [ProducesResponseType(typeof(IEnumerable<SaleDetailResponse>), StatusCodes.Status200OK)]
     // [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -68,7 +69,7 @@ public class SaleDetailController(
         try
         {
             var response = await createSaleDetailUseCase.ExecuteAsync(createSaleDetailRequest);
-            return CreatedAtAction(nameof(GetSaleDetailById), new {id = response.Id}, response);
+            return CreatedAtAction(nameof(GetSaleDetailById), new { id = response.Id }, response);
         }
         catch (DataContractValidationException e)
         {
@@ -83,7 +84,7 @@ public class SaleDetailController(
             return StatusCode(StatusCodes.Status500InternalServerError, new { message = e.Message });
         }
     }
-    
+
     [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(SaleDetailResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -132,5 +133,25 @@ public class SaleDetailController(
             return StatusCode(StatusCodes.Status500InternalServerError, new { message = e.Message });
         }
     }
-    
+
+    [HttpGet("sale/{id:guid}")]
+    [ProducesResponseType(typeof(IEnumerable<SaleDetailResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetSaleDetailsBySaleId(Guid id)
+    {
+        try
+        {
+            var response = await getSaleDetailBySaleIdUseCase.ExecuteAsync(id);
+            return Ok(response);
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = e.Message });
+        }
+    }
 }

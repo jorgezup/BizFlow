@@ -17,6 +17,13 @@ public class SaleDetailRepository(AppDbContext appDbContext) : ISaleDetailReposi
         return await appDbContext.SaleDetails.ToListAsync();
     }
 
+    public async Task<IEnumerable<SaleDetail>> GetBySaleIdAsync(Guid id)
+    {
+        return await appDbContext.SaleDetails
+            .Where(x => x.SaleId == id)
+            .ToListAsync();
+    }
+
     public async Task AddAsync(SaleDetail saleDetail)
     {
         await appDbContext.SaleDetails.AddAsync(saleDetail);

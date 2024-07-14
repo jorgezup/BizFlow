@@ -52,8 +52,8 @@ public abstract class Program
                             options.SubstituteApiVersionInUrl = true;
                         });
 
-                        services.AddApplicationServices();
                         services.AddInfrastructureServices();
+                        services.AddApplicationServices();
 
                         if (context.HostingEnvironment.IsDevelopment())
                             services.AddSwaggerGen(c =>
