@@ -11,6 +11,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<CustomerPreferences> CustomerPreferences { get; init; }
     public DbSet<Sale> Sales { get; init; }
     public DbSet<SaleDetail> SaleDetails { get; init; }
+    
+    public DbSet<Payment> Payments { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -71,6 +73,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasOne(s => s.Product)
             .WithMany(p => p.SaleDetails)
             .HasForeignKey(s => s.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        // Payment configuration
+        modelBuilder.Entity<Payment>()
+            .HasKey(p => p.Id);
+        
+        modelBuilder.Entity<Payment>()
+            .HasOne(p => p.Sale)
+            .WithMany(s => s.Payments)
+            .HasForeignKey(p => p.SaleId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

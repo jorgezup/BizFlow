@@ -11,4 +11,5 @@ public interface IUnitOfWork : IDisposable
     ICustomerRepository CustomerRepository { get; }
     ICustomerPreferencesRepository CustomerPreferencesRepository { get; }
     IPriceHistoryRepository PriceHistoryRepository { get; }
+    IPaymentRepository PaymentRepository { get; }
 }
