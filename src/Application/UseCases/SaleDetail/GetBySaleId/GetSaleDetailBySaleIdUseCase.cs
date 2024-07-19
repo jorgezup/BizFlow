@@ -8,19 +8,26 @@ public class GetSaleDetailBySaleIdUseCase(IUnitOfWork unitOfWork) : IGetSaleDeta
 {
     public async Task<IEnumerable<SaleDetailResponse>> ExecuteAsync(Guid id)
     {
-        var saleDetails = await unitOfWork.SaleDetailRepository.GetBySaleIdAsync(id);
-
-        var enumerable = saleDetails.ToList();
-        
-        if (enumerable.Count == 0)
-            throw new NotFoundException("Sale detail not found");
-        
-        foreach (var saleDetail in enumerable)
+        try
         {
-            saleDetail.Product = await unitOfWork.ProductRepository.GetByIdAsync(saleDetail.ProductId)
-                                 ?? throw new NotFoundException("Product not found");
+            var saleDetails = await unitOfWork.SaleDetailRepository.GetBySaleIdAsync(id);
+
+            var enumerable = saleDetails.ToList();
+
+            if (enumerable.Count is 0)
+                throw new NotFoundException("Sale detail not found");
+
+            foreach (var saleDetail in enumerable)
+            {
+                saleDetail.Product = await unitOfWork.ProductRepository.GetByIdAsync(saleDetail.ProductId)
+                                     ?? throw new NotFoundException("Product not found");
+            }
+
+            return enumerable.Select(x => x.MapToSaleDetailResponse());
         }
-        
-        return enumerable.Select(x => x.MapToSaleDetailResponse());
+        catch (Exception e) when (e is not NotFoundException)
+        {
+            throw new ApplicationException("An error occurred while getting the sale detail", e);
+        }
     }
 }

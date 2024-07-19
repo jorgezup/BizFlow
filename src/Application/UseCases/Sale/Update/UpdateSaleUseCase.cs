@@ -24,7 +24,7 @@ public class UpdateSaleUseCase(IUnitOfWork unitOfWork) : IUpdateSaleUseCase
 
             return saleToUpdate.MapToSaleResponse();
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not NotFoundException)
         {
             await unitOfWork.RollbackTransactionAsync();
             throw new ApplicationException("An error occurred while updating the sale", ex);

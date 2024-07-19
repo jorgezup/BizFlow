@@ -8,11 +8,18 @@ public class GetSaleDetailByIdUseCase(IUnitOfWork unitOfWork) : IGetSaleDetailBy
 {
     public async Task<SaleDetailResponse> ExecuteAsync(Guid id)
     {
-        var saleDetail = await unitOfWork.SaleDetailRepository.GetByIdAsync(id);
+        try
+        {
+            var saleDetail = await unitOfWork.SaleDetailRepository.GetByIdAsync(id);
 
-        if (saleDetail == null)
-            throw new NotFoundException("Sale detail not found");
+            if (saleDetail is null)
+                throw new NotFoundException("Sale detail not found");
 
-        return saleDetail.MapToSaleDetailResponse();
+            return saleDetail.MapToSaleDetailResponse();
+        }
+        catch (Exception e) when (e is not NotFoundException)
+        {
+            throw new ApplicationException("An error occurred while getting the sale detail", e);
+        }
     }
 }

@@ -17,6 +17,13 @@ public class SaleRepository(AppDbContext appDbContext) : ISaleRepository
         return await appDbContext.Sales.ToListAsync();
     }
 
+    public async Task<IEnumerable<Sale>> GetSalesByCustomerIdAsync(Guid customerId)
+    {
+        return await appDbContext.Sales
+            .Where(s => s.CustomerId == customerId)
+            .ToListAsync();
+    }
+
     public async Task AddAsync(Sale sale)
     {
         await appDbContext.Sales.AddAsync(sale);

@@ -11,7 +11,7 @@ public class DeleteCustomerUseCase(IUnitOfWork unitOfWork) : IDeleteCustomerUseC
     {
         var customer = await unitOfWork.CustomerRepository.GetByIdAsync(id);
 
-        if (customer == null)
+        if (customer is null)
             return false;
 
         await unitOfWork.BeginTransactionAsync();

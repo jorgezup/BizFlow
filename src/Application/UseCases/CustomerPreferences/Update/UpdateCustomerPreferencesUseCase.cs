@@ -35,7 +35,7 @@ public class UpdateCustomerPreferencesUseCase(
 
             return customerPreferences.MapToCustomerPreferencesResponse();
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not DataContractValidationException and not NotFoundException)
         {
             await unitOfWork.RollbackTransactionAsync();
             throw new ApplicationException("An error occurred while updating customer preferences", ex);

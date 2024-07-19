@@ -8,10 +8,17 @@ public class GetSaleByIdUseCase(IUnitOfWork unitOfWork) : IGetSaleByIdUseCase
 {
     public async Task<SaleResponse> ExecuteAsync(Guid id)
     {
-        var sale = await unitOfWork.SaleRepository.GetByIdAsync(id);
-        
-        if (sale is null) throw new NotFoundException("Sale not found");
+        try
+        {
+            var sale = await unitOfWork.SaleRepository.GetByIdAsync(id);
 
-        return sale.MapToSaleResponse();
+            if (sale is null) throw new NotFoundException("Sale not found");
+
+            return sale.MapToSaleResponse();
+        }
+        catch (Exception e) when (e is not NotFoundException)
+        {
+            throw new ApplicationException("An error occurred while getting the sale", e);
+        }
     }
 }

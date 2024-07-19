@@ -10,7 +10,7 @@ public class UpdatePriceHistoryUseCase(IUnitOfWork unitOfWork) : IUpdatePriceHis
     {
         var priceHistory = await unitOfWork.PriceHistoryRepository.GetByIdAsync(id);
 
-        if (priceHistory == null)
+        if (priceHistory is null)
             throw new NotFoundException("Price history not found");
 
         priceHistory.Price = request.Price;
@@ -24,7 +24,7 @@ public class UpdatePriceHistoryUseCase(IUnitOfWork unitOfWork) : IUpdatePriceHis
 
             return priceHistory.MapToPriceHistoryResponse();
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not NotFoundException)
         {
             await unitOfWork.RollbackTransactionAsync();
             throw new ApplicationException("An error occurred while updating price history", ex);

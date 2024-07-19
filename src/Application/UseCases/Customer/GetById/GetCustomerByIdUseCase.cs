@@ -8,11 +8,19 @@ public class GetCustomerByIdUseCase(IUnitOfWork unitOfWork) : IGetCustomerByIdUs
 {
     public async Task<CustomerResponse> ExecuteAsync(Guid id)
     {
-        var customer = await unitOfWork.CustomerRepository.GetByIdAsync(id);
+        try
+        {
+            var customer = await unitOfWork.CustomerRepository.GetByIdAsync(id);
 
-        if (customer == null)
-            throw new NotFoundException("Customer not found");
+            if (customer is null)
+                throw new NotFoundException("Customer not found");
 
-        return customer.MapToCustomerResponse();
+            return customer.MapToCustomerResponse();
+        }
+        catch (Exception ex) when (ex is not NotFoundException)
+        {
+            throw new ApplicationException("An error occurred while getting customer by id", ex);
+        }
+        
     }
 }

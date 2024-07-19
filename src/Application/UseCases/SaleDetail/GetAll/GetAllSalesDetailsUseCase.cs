@@ -8,12 +8,19 @@ public class GetAllSalesDetailsUseCase(IUnitOfWork unitOfWork) : IGetAllSalesDet
 {
     public async Task<IEnumerable<SaleDetailResponse>> ExecuteAsync()
     {
-        var saleDetails = await unitOfWork.SaleDetailRepository.GetAllAsync();
+        try
+        {
+            var saleDetails = await unitOfWork.SaleDetailRepository.GetAllAsync();
 
-        var salesDetailsList = saleDetails.ToList();
-        if (saleDetails is null || salesDetailsList.Count is 0)
-            throw new NotFoundException("Sale details not found");
+            var salesDetailsList = saleDetails.ToList();
+            if (saleDetails is null || salesDetailsList.Count is 0)
+                throw new NotFoundException("Sale details not found");
 
-        return salesDetailsList.Select(x => x.MapToSaleDetailResponse());
+            return salesDetailsList.Select(x => x.MapToSaleDetailResponse());
+        }
+        catch (Exception e) when (e is not NotFoundException)
+        {
+            throw new ApplicationException("An error occurred while getting all sale details", e);
+        }
     }
 }

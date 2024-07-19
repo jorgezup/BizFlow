@@ -1,8 +1,6 @@
 using Application.DTOs.SaleDetail;
 using Core.Exceptions;
 using Core.Interfaces;
-using System;
-using System.Threading.Tasks;
 
 namespace Application.UseCases.SaleDetail.Update;
 
@@ -16,7 +14,7 @@ public class UpdateSaleDetailUseCase(IUnitOfWork unitOfWork) : IUpdateSaleDetail
         {
             var saleDetail = await unitOfWork.SaleDetailRepository.GetByIdAsync(id);
 
-            if (saleDetail == null)
+            if (saleDetail is null)
                 throw new NotFoundException("Sale detail not found");
 
             var saleDetailToUpdate = saleDetail.UpdateSaleDetail(request);
@@ -26,7 +24,7 @@ public class UpdateSaleDetailUseCase(IUnitOfWork unitOfWork) : IUpdateSaleDetail
 
             return saleDetailToUpdate.MapToSaleDetailResponse();
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not NotFoundException)
         {
             await unitOfWork.RollbackTransactionAsync();
             throw new ApplicationException("An error occurred while updating the sale detail", ex);

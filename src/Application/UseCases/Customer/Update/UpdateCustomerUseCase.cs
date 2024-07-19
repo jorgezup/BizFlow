@@ -12,7 +12,7 @@ public class UpdateCustomerUseCase(IUnitOfWork unitOfWork, IValidator<CustomerUp
     {
         var customerFound = await unitOfWork.CustomerRepository.GetByIdAsync(id);
 
-        if (customerFound == null)
+        if (customerFound is null)
             throw new NotFoundException("Customer not found");
 
         if (!string.IsNullOrWhiteSpace(request.Email))
@@ -36,7 +36,7 @@ public class UpdateCustomerUseCase(IUnitOfWork unitOfWork, IValidator<CustomerUp
             await unitOfWork.CommitTransactionAsync();
             return customerToUpdate.MapToCustomerResponse();
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not DataContractValidationException and not ConflictException)
         {
             await unitOfWork.RollbackTransactionAsync();
             throw new ApplicationException("An error occurred while updating the customer", ex);

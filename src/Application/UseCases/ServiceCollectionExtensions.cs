@@ -1,5 +1,6 @@
 using Application.UseCases.Customer;
 using Application.UseCases.CustomerPreferences;
+using Application.UseCases.Payment;
 using Application.UseCases.PriceHistory;
 using Application.UseCases.Product;
 using Application.UseCases.Sale;
@@ -29,5 +30,8 @@ public static class ServiceCollectionExtensions
         
         // SaleDetail
         services.AddSaleDetailUseCases();
+        
+        // Payment
+        services.AddPaymentUseCases();
     }
 }

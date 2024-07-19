@@ -1,0 +1,35 @@
+@WebAPI_HostAddress = http://localhost:5105
+
+## Customers
+#
+### Retrieve all customers
+GET {{WebAPI_HostAddress}}/api/v1.0/customers
+
+### Retrieve customer by ID
+GET {{WebAPI_HostAddress}}/api/v1.0/customers/9175e3c7-aa0c-406b-b8c0-91112daa11d7
+
+### Add a new customer
+POST {{WebAPI_HostAddress}}/api/v1.0/customers
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "phoneNumber": "1234567890",
+  "address": "Berlin Avenue, 10"
+}
+
+### Update an existing customer
+PUT {{WebAPI_HostAddress}}/api/v1.0/customers
+Content-Type: application/json
+
+{
+  "CustomerId": "customer_id_here",
+  "Name": "Updated Name",
+  "Email": "updated.email@example.com",
+  "PhoneNumber": "9876543210"
+}
+
+### Delete a customer by ID
+DELETE {{WebAPI_HostAddress}}/api/v1.0/customers/9175e3c7-aa0c-406b-b8c0-91112daa11d7
+

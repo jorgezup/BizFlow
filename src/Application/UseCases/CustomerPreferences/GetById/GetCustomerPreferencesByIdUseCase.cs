@@ -8,11 +8,18 @@ public class GetCustomerPreferencesByIdUseCase(IUnitOfWork unitOfWork) : IGetCus
 {
     public async Task<CustomerPreferencesResponse> ExecuteAsync(Guid id)
     {
-        var customerPreferences = await unitOfWork.CustomerPreferencesRepository.GetByIdAsync(id);
+        try
+        {
+            var customerPreferences = await unitOfWork.CustomerPreferencesRepository.GetByIdAsync(id);
 
-        if (customerPreferences is null)
-            throw new NotFoundException("Customer preferences not found");
+            if (customerPreferences is null)
+                throw new NotFoundException("Customer preferences not found");
 
-        return customerPreferences.MapToCustomerPreferencesResponse();
+            return customerPreferences.MapToCustomerPreferencesResponse();
+        }
+        catch (Exception e) when (e is not NotFoundException)
+        {
+            throw new ApplicationException("An error occurred while getting customer preferences by id", e);
+        }
     }
 }

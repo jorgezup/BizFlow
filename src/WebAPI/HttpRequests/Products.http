@@ -1,0 +1,31 @@
+@WebAPI_HostAddress = http://localhost:5105
+
+## Products
+
+### Retrieve all products
+GET {{WebAPI_HostAddress}}/api/v1.0/products
+
+### Retrieve product by ID
+GET {{WebAPI_HostAddress}}/api/v1.0/products/d062b7fe-236f-4948-8bf0-15e1ad0b9599
+
+### Create a new product
+POST {{WebAPI_HostAddress}}/api/v1.0/products
+Content-Type: application/json
+
+{
+  "name": "capim",
+  "description": "capiaçu",
+  "unitOfMeasure": "kg",
+  "price": 10
+}
+
+### Update an existing product
+PUT {{WebAPI_HostAddress}}/api/v1.0/products?id=f7f6ec0b-33c1-4a3e-854a-78aace214fce
+Content-Type: application/json
+
+{
+  "price": 9.96
+}
+
+### Delete a product by ID
+DELETE {{WebAPI_HostAddress}}/api/v1.0/products/f7f6ec0b-33c1-4a3e-854a-78aace214fce

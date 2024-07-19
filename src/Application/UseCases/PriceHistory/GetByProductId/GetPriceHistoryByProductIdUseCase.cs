@@ -7,7 +7,14 @@ public class GetPriceHistoryByProductIdUseCase(IUnitOfWork unitOfWork) : IGetPri
 {
     public async Task<IEnumerable<PriceHistoryResponse>> ExecuteAsync(Guid productId)
     {
-        var priceHistories = await unitOfWork.PriceHistoryRepository.GetByProductIdAsync(productId);
-        return priceHistories.Select(x => x.MapToPriceHistoryResponse());
+        try
+        {
+            var priceHistories = await unitOfWork.PriceHistoryRepository.GetByProductIdAsync(productId);
+            return priceHistories.Select(x => x.MapToPriceHistoryResponse());
+        }
+        catch (Exception e)
+        {
+            throw new ApplicationException("An error occurred while getting price histories by product id", e);
+        }
     }
 }

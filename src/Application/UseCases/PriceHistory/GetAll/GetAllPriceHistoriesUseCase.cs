@@ -7,7 +7,14 @@ public class GetAllPriceHistoriesUseCase(IUnitOfWork unitOfWork) : IGetAllPriceH
 {
     public async Task<IEnumerable<PriceHistoryResponse>> ExecuteAsync()
     {
-        var priceHistories = await unitOfWork.PriceHistoryRepository.GetAllAsync();
-        return priceHistories.Select(x => x.MapToPriceHistoryResponse());
+        try
+        {
+            var priceHistories = await unitOfWork.PriceHistoryRepository.GetAllAsync();
+            return priceHistories.Select(x => x.MapToPriceHistoryResponse());
+        }
+        catch (Exception e)
+        {
+            throw new ApplicationException("An error occurred while getting all price histories", e);
+        }
     }
 }

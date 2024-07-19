@@ -14,5 +14,6 @@ public class Sale
 
     public List<SaleDetail> SaleDetails { get; set; }
 
-    public Customer Customer { get; init; }
+    public Customer Customer { get; set; }
+    public List<Payment> Payments { get; set; } = [];
 }

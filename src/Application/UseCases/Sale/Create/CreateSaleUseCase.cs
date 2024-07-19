@@ -1,6 +1,5 @@
 using Application.DTOs.Sale;
 using Application.DTOs.SaleDetail;
-using Application.UseCases.Product.GetById;
 using Core.Exceptions;
 using Core.Interfaces;
 using FluentValidation;
@@ -54,11 +53,10 @@ public class CreateSaleUseCase(
 
             return sale.MapToSaleResponse();
         }
-        catch (Exception e)
+        catch (Exception e) when (e is not NotFoundException and not DataContractValidationException)
         {
-            Console.WriteLine(e);
             await unitOfWork.RollbackTransactionAsync();
-            throw;
+            throw new ApplicationException("An error occurred while creating the sale", e);
         }
     }
 }

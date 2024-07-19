@@ -9,7 +9,7 @@ public class DeleteCustomerPreferencesUseCase(IUnitOfWork unitOfWork) : IDeleteC
     {
         var customerPreferences = await unitOfWork.CustomerPreferencesRepository.GetByIdAsync(id);
 
-        if (customerPreferences == null)
+        if (customerPreferences is null)
             throw new NotFoundException("Customer preferences not found");
 
         await unitOfWork.BeginTransactionAsync();
@@ -20,7 +20,7 @@ public class DeleteCustomerPreferencesUseCase(IUnitOfWork unitOfWork) : IDeleteC
             await unitOfWork.CommitTransactionAsync();
             return true;
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not NotFoundException)
         {
             await unitOfWork.RollbackTransactionAsync();
             throw new ApplicationException("An error occurred while deleting customer preferences", ex);

@@ -8,11 +8,18 @@ public class GetPriceHistoryByIdUseCase(IUnitOfWork unitOfWork) : IGetPriceHisto
 {
     public async Task<PriceHistoryResponse> ExecuteAsync(Guid id)
     {
-        var priceHistory = await unitOfWork.PriceHistoryRepository.GetByIdAsync(id);
+        try
+        {
+            var priceHistory = await unitOfWork.PriceHistoryRepository.GetByIdAsync(id);
 
-        if (priceHistory is null)
-            throw new NotFoundException("Price history not found");
+            if (priceHistory is null)
+                throw new NotFoundException("Price history not found");
 
-        return priceHistory.MapToPriceHistoryResponse();
+            return priceHistory.MapToPriceHistoryResponse();
+        }
+        catch (Exception e) when (e is not NotFoundException)
+        {
+            throw new ApplicationException("An error occurred while getting price history", e);
+        }
     }
 }

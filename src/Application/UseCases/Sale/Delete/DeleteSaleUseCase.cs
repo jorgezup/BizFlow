@@ -13,14 +13,14 @@ public class DeleteSaleUseCase(IUnitOfWork unitOfWork) : IDeleteSaleUseCase
             throw new NotFoundException("Sale not found");
 
         await unitOfWork.BeginTransactionAsync();
-            
+
         try
         {
             await unitOfWork.SaleRepository.DeleteAsync(sale.Id);
             await unitOfWork.CommitTransactionAsync();
             return true;
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not NotFoundException)
         {
             await unitOfWork.RollbackTransactionAsync();
             throw new ApplicationException("An error occurred while deleting the sale", ex);

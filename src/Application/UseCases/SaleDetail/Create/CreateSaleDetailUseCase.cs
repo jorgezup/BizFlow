@@ -28,7 +28,7 @@ public class CreateSaleDetailUseCase(
             await unitOfWork.CommitTransactionAsync();
             return saleDetail.MapToSaleDetailResponse();
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not DataContractValidationException)
         {
             await unitOfWork.RollbackTransactionAsync();
             throw new ApplicationException("An error occurred while creating the sale detail", ex);

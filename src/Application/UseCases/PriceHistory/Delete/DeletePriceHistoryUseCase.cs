@@ -20,7 +20,7 @@ public class DeletePriceHistoryUseCase(IUnitOfWork unitOfWork) : IDeletePriceHis
             await unitOfWork.CommitTransactionAsync();
             return true;
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not NotFoundException)
         {
             await unitOfWork.RollbackTransactionAsync();
             throw new ApplicationException("An error occurred while deleting price history", ex);

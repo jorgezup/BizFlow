@@ -7,7 +7,14 @@ public class GetAllCustomerPreferencesUseCase(IUnitOfWork unitOfWork) : IGetAllC
 {
     public async Task<IEnumerable<CustomerPreferencesResponse>> ExecuteAsync()
     {
-        var customerPreferences = await unitOfWork.CustomerPreferencesRepository.GetAllAsync();
-        return customerPreferences.Select(x => x.MapToCustomerPreferencesResponse());
+        try
+        {
+            var customerPreferences = await unitOfWork.CustomerPreferencesRepository.GetAllAsync();
+            return customerPreferences.Select(x => x.MapToCustomerPreferencesResponse());
+        }
+        catch (Exception e)
+        {
+            throw new ApplicationException("An error occurred while getting customer preferences", e);
+        }
     }
 }

@@ -33,7 +33,7 @@ public class CreateCustomerUseCase(
 
             return customer.MapToCustomerResponse();
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not DataContractValidationException and not ConflictException)
         {
             await unitOfWork.RollbackTransactionAsync();
             throw new ApplicationException("An error occurred while creating the customer", ex);

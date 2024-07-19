@@ -33,7 +33,7 @@ public class CreateCustomerPreferencesUseCase(
 
             return customerPreferences.MapToCustomerPreferencesResponse();
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not DataContractValidationException and not NotFoundException)
         {
             await unitOfWork.RollbackTransactionAsync();
             throw new ApplicationException("An error occurred while creating customer preferences", ex);
@@ -44,6 +44,6 @@ public class CreateCustomerPreferencesUseCase(
     {
         var customerExists = await unitOfWork.CustomerRepository.GetByIdAsync(customerId);
         var productExists = await unitOfWork.ProductRepository.GetByIdAsync(productId);
-        return customerExists != null && productExists != null;
+        return customerExists is not null && productExists is not null;
     }
 }
