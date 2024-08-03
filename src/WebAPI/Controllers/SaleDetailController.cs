@@ -1,6 +1,7 @@
 using Application.DTOs.SaleDetail;
 using Application.UseCases.SaleDetail.Create;
 using Application.UseCases.SaleDetail.Delete;
+using Application.UseCases.SaleDetail.GetAll;
 using Application.UseCases.SaleDetail.GetById;
 using Application.UseCases.SaleDetail.GetBySaleId;
 using Application.UseCases.SaleDetail.Update;
@@ -15,9 +16,9 @@ namespace WebAPI.Controllers;
 [Route("api/v{version:apiVersion}/sale-details")]
 public class SaleDetailController(
     GetSaleDetailByIdUseCase getSaleDetailByIdUseCase,
-    // GetAllSaleDetailsUseCase getAllSaleDetailsUseCase,
+    GetAllSalesDetailsUseCase getAllSaleDetailsUseCase,
     GetSaleDetailBySaleIdUseCase getSaleDetailBySaleIdUseCase,
-    CreateSaleDetailUseCase createSaleDetailUseCase,
+    // CreateSaleDetailUseCase createSaleDetailUseCase,
     UpdateSaleDetailUseCase updateSaleDetailUseCase,
     DeleteSaleDetailUseCase deleteSaleDetailUseCase) : ControllerBase
 {
@@ -42,42 +43,20 @@ public class SaleDetailController(
         }
     }
 
-    // [HttpGet]
-    // [ProducesResponseType(typeof(IEnumerable<SaleDetailResponse>), StatusCodes.Status200OK)]
-    // [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    // public async Task<IActionResult> GetAllSaleDetails()
-    // {
-    //     try
-    //     {
-    //         var response = await getAllSaleDetailsUseCase.ExecuteAsync();
-    //         return Ok(response);
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         return StatusCode(StatusCodes.Status500InternalServerError, new { message = e.Message });
-    //     }
-    // }
-
-    [HttpPost]
-    [ProducesResponseType(typeof(SaleDetailResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status409Conflict)]
-    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<SaleDetailResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateSaleDetail(SaleDetailRequest createSaleDetailRequest)
+    public async Task<IActionResult> GetAllSaleDetails()
     {
         try
         {
-            var response = await createSaleDetailUseCase.ExecuteAsync(createSaleDetailRequest);
-            return CreatedAtAction(nameof(GetSaleDetailById), new { id = response.Id }, response);
+            var response = await getAllSaleDetailsUseCase.ExecuteAsync();
+            return Ok(response);
         }
-        catch (DataContractValidationException e)
+        catch (NotFoundException)
         {
-            return BadRequest(new { message = e.Message, errors = e.ValidationErrors });
-        }
-        catch (ConflictException e)
-        {
-            return Conflict(new { message = e.Message });
+            return NotFound();
         }
         catch (Exception e)
         {
@@ -85,7 +64,34 @@ public class SaleDetailController(
         }
     }
 
-    [HttpPut("{id:guid}")]
+    // [HttpPost]
+    // [ProducesResponseType(typeof(SaleDetailResponse), StatusCodes.Status200OK)]
+    // [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    // [ProducesResponseType(StatusCodes.Status409Conflict)]
+    // [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    // [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    // public async Task<IActionResult> CreateSaleDetail(SaleDetailRequest createSaleDetailRequest)
+    // {
+    //     try
+    //     {
+    //         var response = await createSaleDetailUseCase.ExecuteAsync(createSaleDetailRequest);
+    //         return CreatedAtAction(nameof(GetSaleDetailById), new { id = response.Id }, response);
+    //     }
+    //     catch (DataContractValidationException e)
+    //     {
+    //         return BadRequest(new { message = e.Message, errors = e.ValidationErrors });
+    //     }
+    //     catch (ConflictException e)
+    //     {
+    //         return Conflict(new { message = e.Message });
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         return StatusCode(StatusCodes.Status500InternalServerError, new { message = e.Message });
+    //     }
+    // }
+
+    [HttpPut]
     [ProducesResponseType(typeof(SaleDetailResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

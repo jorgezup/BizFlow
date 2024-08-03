@@ -14,6 +14,9 @@ public class GetSaleDetailByIdUseCase(IUnitOfWork unitOfWork) : IGetSaleDetailBy
 
             if (saleDetail is null)
                 throw new NotFoundException("Sale detail not found");
+            
+            if (saleDetail.ProductId != null)
+                saleDetail.Product = await unitOfWork.ProductRepository.GetByIdAsync(saleDetail.ProductId);
 
             return saleDetail.MapToSaleDetailResponse();
         }

@@ -13,6 +13,6 @@ public class SaleDetail
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; set; }
 
-    public Sale Sale { get; init; }
+    public Sale Sale { get; set; }
     public Product Product { get; set; }
 }

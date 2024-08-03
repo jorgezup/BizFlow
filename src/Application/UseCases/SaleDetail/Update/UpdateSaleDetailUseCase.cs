@@ -16,13 +16,20 @@ public class UpdateSaleDetailUseCase(IUnitOfWork unitOfWork) : IUpdateSaleDetail
 
             if (saleDetail is null)
                 throw new NotFoundException("Sale detail not found");
+            
+            if (saleDetail.ProductId != null)
+                saleDetail.Product = await unitOfWork.ProductRepository.GetByIdAsync(saleDetail.ProductId);
 
-            var saleDetailToUpdate = saleDetail.UpdateSaleDetail(request);
+            // var saleDetailToUpdate = saleDetail.UpdateSaleDetail(request);
+            
+            saleDetail.ProductId = request.ProductId ?? saleDetail.ProductId;
+            saleDetail.Quantity = (decimal)(request.Quantity > 0 ? request.Quantity  : saleDetail.Quantity);
+            saleDetail.UpdatedAt = DateTime.UtcNow;
 
-            await unitOfWork.SaleDetailRepository.UpdateAsync(saleDetailToUpdate);
+            await unitOfWork.SaleDetailRepository.UpdateAsync(saleDetail);
             await unitOfWork.CommitTransactionAsync();
 
-            return saleDetailToUpdate.MapToSaleDetailResponse();
+            return saleDetail.MapToSaleDetailResponse();
         }
         catch (Exception ex) when (ex is not NotFoundException)
         {

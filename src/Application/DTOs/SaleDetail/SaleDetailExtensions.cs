@@ -34,9 +34,7 @@ public static class SaleDetailExtensions
         UpdateSaleDetailRequest saleDetailUpdateRequest)
     {
         saleDetail.ProductId = saleDetailUpdateRequest.ProductId ?? saleDetail.ProductId;
-        saleDetail.Quantity = saleDetailUpdateRequest.Quantity ?? saleDetail.Quantity;
-        saleDetail.UnitPrice = saleDetailUpdateRequest.UnitPrice ?? saleDetail.UnitPrice;
-        saleDetail.Subtotal = saleDetailUpdateRequest.Subtotal ?? saleDetail.Subtotal;
+        saleDetail.Quantity = (decimal)(saleDetailUpdateRequest.Quantity > 0 ? saleDetailUpdateRequest.Quantity  : saleDetail.Quantity);
         saleDetail.UpdatedAt = DateTime.UtcNow;
         return saleDetail;
     }
