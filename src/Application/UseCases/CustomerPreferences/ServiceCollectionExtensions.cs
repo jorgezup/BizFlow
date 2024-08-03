@@ -2,6 +2,7 @@ using Application.DTOs.CustomerPreferences;
 using Application.UseCases.CustomerPreferences.Create;
 using Application.UseCases.CustomerPreferences.Delete;
 using Application.UseCases.CustomerPreferences.GetAll;
+using Application.UseCases.CustomerPreferences.GetByCustomerId;
 using Application.UseCases.CustomerPreferences.GetById;
 using Application.UseCases.CustomerPreferences.Update;
 using Application.UseCases.CustomerPreferences.Validator;
@@ -24,5 +25,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<UpdateCustomerPreferencesUseCase>();
         services.AddScoped<CreateCustomerPreferencesUseCase>();
         services.AddScoped<DeleteCustomerPreferencesUseCase>();
+        services.AddScoped<GetCustomerPreferencesByCustomerIdUseCase>();
     }
 }

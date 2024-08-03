@@ -1,12 +1,13 @@
+using Application.DTOs.CustomerPreferences;
 using Core.Exceptions;
 using Core.Interfaces;
 
 namespace Application.UseCases.CustomerPreferences.GetByCustomerId;
 
-public class GetCustomerPreferencesByICustomerIdUseCase(IUnitOfWork unitOfWork)
+public class GetCustomerPreferencesByCustomerIdUseCase(IUnitOfWork unitOfWork)
     : IGetCustomerPreferencesByICustomerIdUseCase
 {
-    public async Task<IEnumerable<Core.Entities.CustomerPreferences>> ExecuteAsync(Guid customerId)
+    public async Task<IEnumerable<CustomerPreferencesResponse>> ExecuteAsync(Guid customerId)
     {
         try
         {
@@ -17,7 +18,7 @@ public class GetCustomerPreferencesByICustomerIdUseCase(IUnitOfWork unitOfWork)
             if (customerPreferencesByCustomerIdList.Count is 0)
                 throw new NotFoundException("Customer preferences not found");
 
-            return customerPreferencesByCustomerIdList;
+            return customerPreferencesByCustomerIdList.Select(x => x.MapToCustomerPreferencesResponse());
         }
         catch (Exception e) when (e is not NotFoundException)
         {

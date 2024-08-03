@@ -2,6 +2,7 @@ using Application.DTOs.CustomerPreferences;
 using Application.UseCases.CustomerPreferences.Create;
 using Application.UseCases.CustomerPreferences.Delete;
 using Application.UseCases.CustomerPreferences.GetAll;
+using Application.UseCases.CustomerPreferences.GetByCustomerId;
 using Application.UseCases.CustomerPreferences.GetById;
 using Application.UseCases.CustomerPreferences.Update;
 using Asp.Versioning;
@@ -18,7 +19,8 @@ public class CustomerPreferencesController(
     GetCustomerPreferencesByIdUseCase getCustomerPreferencesByIdUseCase,
     UpdateCustomerPreferencesUseCase updateCustomerPreferencesUseCase,
     DeleteCustomerPreferencesUseCase deleteCustomerPreferencesUseCase,
-    GetAllCustomerPreferencesUseCase getAllCustomerPreferencesUseCase)
+    GetAllCustomerPreferencesUseCase getAllCustomerPreferencesUseCase,
+    GetCustomerPreferencesByCustomerIdUseCase getCustomerPreferencesByICustomerIdUseCase)
     : ControllerBase
 {
     [HttpPost]
@@ -89,7 +91,7 @@ public class CustomerPreferencesController(
         }
     }
 
-    [HttpPut("{id:guid}")]
+    [HttpPut]
     [ProducesResponseType(typeof(CustomerPreferencesResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -121,6 +123,27 @@ public class CustomerPreferencesController(
             var success = await deleteCustomerPreferencesUseCase.ExecuteAsync(id);
             if (!success) return NotFound();
             return NoContent();
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = e.Message });
+        }
+    }
+
+    [HttpGet("{customerId:guid}/customer")]
+    [ProducesResponseType(typeof(IEnumerable<CustomerPreferencesResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetCustomerPreferencesByICustomerId(Guid customerId)
+    {
+        try
+        {
+            var response = await getCustomerPreferencesByICustomerIdUseCase.ExecuteAsync(customerId);
+            return Ok(response);
         }
         catch (NotFoundException)
         {

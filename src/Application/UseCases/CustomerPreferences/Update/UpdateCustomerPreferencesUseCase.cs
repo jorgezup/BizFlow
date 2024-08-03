@@ -23,7 +23,9 @@ public class UpdateCustomerPreferencesUseCase(
             throw new DataContractValidationException("Invalid customer preferences data when updating",
                 validationResult.Errors);
 
-        customerPreferences.PreferredPurchaseDays = request.PreferredPurchaseDays;
+        customerPreferences.PreferredPurchaseDays.Clear();
+        customerPreferences.PreferredPurchaseDays.AddRange(request.PreferredPurchaseDays);
+        
         customerPreferences.UpdatedAt = DateTime.UtcNow;
 
         await unitOfWork.BeginTransactionAsync();
