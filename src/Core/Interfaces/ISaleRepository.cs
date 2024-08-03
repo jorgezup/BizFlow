@@ -1,3 +1,4 @@
+using System.Data;
 using Core.Entities;
 
 namespace Core.Interfaces;

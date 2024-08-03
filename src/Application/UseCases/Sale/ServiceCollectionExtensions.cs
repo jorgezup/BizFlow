@@ -2,6 +2,7 @@ using Application.DTOs.Sale;
 using Application.UseCases.Sale.Create;
 using Application.UseCases.Sale.Delete;
 using Application.UseCases.Sale.GetAll;
+using Application.UseCases.Sale.GetByCustomerId;
 using Application.UseCases.Sale.GetById;
 using Application.UseCases.Sale.Update;
 using Application.UseCases.Sale.Validator;
@@ -23,5 +24,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<GetAllSalesUseCase>();
         services.AddScoped<GetSaleByIdUseCase>();
         services.AddScoped<UpdateSaleUseCase>();
+        services.AddScoped<GetSalesByCustomerIdUseCase>();
     }
 }

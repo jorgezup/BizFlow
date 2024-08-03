@@ -1,3 +1,4 @@
+using Application.DTOs.Sale;
 using Core.Entities;
 using Core.Interfaces;
 using Infrastructure.Data;

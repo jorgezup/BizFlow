@@ -2,6 +2,7 @@ using Application.DTOs.Sale;
 using Application.UseCases.Sale.Create;
 using Application.UseCases.Sale.Delete;
 using Application.UseCases.Sale.GetAll;
+using Application.UseCases.Sale.GetByCustomerId;
 using Application.UseCases.Sale.GetById;
 using Application.UseCases.Sale.Update;
 using Asp.Versioning;
@@ -18,7 +19,8 @@ public class SaleController(
     GetAllSalesUseCase getAllSalesUseCase,
     CreateSaleUseCase createSaleUseCase,
     UpdateSaleUseCase updateSaleUseCase,
-    DeleteSaleUseCase deleteSaleUseCase) : ControllerBase
+    DeleteSaleUseCase deleteSaleUseCase,
+    GetSalesByCustomerIdUseCase getSalesByCustomerIdUseCase) : ControllerBase
 {
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(SaleResponse), StatusCodes.Status200OK)]
@@ -40,7 +42,7 @@ public class SaleController(
             return StatusCode(StatusCodes.Status500InternalServerError, new { message = e.Message });
         }
     }
-    
+
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<SaleResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -51,7 +53,6 @@ public class SaleController(
         {
             var response = await getAllSalesUseCase.ExecuteAsync();
             return Ok(response);
-
         }
         catch (NotFoundException)
         {
@@ -62,7 +63,7 @@ public class SaleController(
             return StatusCode(StatusCodes.Status500InternalServerError, new { message = e.Message });
         }
     }
-    
+
     [HttpPost]
     [ProducesResponseType(typeof(SaleResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -89,8 +90,8 @@ public class SaleController(
             return StatusCode(StatusCodes.Status500InternalServerError, new { message = e.Message });
         }
     }
-    
-    [HttpPut("{id:guid}")]
+
+    [HttpPut]
     [ProducesResponseType(typeof(SaleResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -107,8 +108,16 @@ public class SaleController(
         {
             return BadRequest(new { message = e.Message, errors = e.ValidationErrors });
         }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = e.Message });
+        }
     }
-    
+
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -120,6 +129,27 @@ public class SaleController(
             var result = await deleteSaleUseCase.ExecuteAsync(id);
             if (!result) return NotFound();
             return NoContent();
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = e.Message });
+        }
+    }
+
+    [HttpGet("{customerId:guid}/customers")]
+    [ProducesResponseType(typeof(IEnumerable<SaleResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetSalesByCustomerId(Guid customerId)
+    {
+        try
+        {
+            var response = await getSalesByCustomerIdUseCase.ExecuteAsync(customerId);
+            return Ok(response);
         }
         catch (NotFoundException)
         {

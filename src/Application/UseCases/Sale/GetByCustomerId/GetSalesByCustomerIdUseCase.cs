@@ -1,11 +1,12 @@
+using Application.DTOs.Sale;
 using Core.Exceptions;
 using Core.Interfaces;
 
 namespace Application.UseCases.Sale.GetByCustomerId;
 
-public class GetSalesByCustomerId(IUnitOfWork unitOfWork) : IGetSalesByCustomerId
+public class GetSalesByCustomerIdUseCase(IUnitOfWork unitOfWork) : IGetSalesByCustomerIdUseCase
 {
-    public async Task<IEnumerable<Core.Entities.Sale>> ExecuteAsync(Guid customerId)
+    public async Task<IEnumerable<SaleResponse>> ExecuteAsync(Guid customerId)
     {
         try
         {
@@ -13,7 +14,7 @@ public class GetSalesByCustomerId(IUnitOfWork unitOfWork) : IGetSalesByCustomerI
 
             if (sales is null) throw new NotFoundException("Sales not found");
 
-            return sales;
+            return sales.Select(x => x.MapToSaleResponse());
         }
         catch (Exception e) when (e is not NotFoundException)
         {

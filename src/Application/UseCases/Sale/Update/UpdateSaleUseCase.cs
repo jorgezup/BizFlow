@@ -17,12 +17,14 @@ public class UpdateSaleUseCase(IUnitOfWork unitOfWork) : IUpdateSaleUseCase
             if (saleFound is null)
                 throw new NotFoundException("Sale not found");
 
-            var saleToUpdate = saleFound.MapToSale(request);
-
-            await unitOfWork.SaleRepository.UpdateAsync(saleToUpdate);
+            saleFound.Status = string.IsNullOrWhiteSpace(request.Status) ? saleFound.Status : request.Status;
+            saleFound.SaleDate = request.SaleDate ?? saleFound.SaleDate;
+            saleFound.UpdatedAt = DateTime.UtcNow; 
+            
+            await unitOfWork.SaleRepository.UpdateAsync(saleFound);
             await unitOfWork.CommitTransactionAsync();
 
-            return saleToUpdate.MapToSaleResponse();
+            return saleFound.MapToSaleResponse();
         }
         catch (Exception ex) when (ex is not NotFoundException)
         {

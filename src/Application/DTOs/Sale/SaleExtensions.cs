@@ -32,6 +32,8 @@ public static class SaleExtensions
     {
         return new Core.Entities.Sale
         {
+            Id = sale.Id,
+            CustomerId = sale.CustomerId,
             SaleDate = updateSaleRequest.SaleDate ?? sale.SaleDate,
             TotalAmount = updateSaleRequest.TotalAmount ?? sale.TotalAmount,
             Status = updateSaleRequest.Status ?? sale.Status,
