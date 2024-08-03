@@ -4,5 +4,5 @@ namespace Application.UseCases.Payment.Create;
 
 public interface ICreatePaymentUseCase
 {
-    public Task<Core.Entities.Payment> ExecuteAsync(PaymentRequest request);
+    public Task<PaymentResponse> ExecuteAsync(PaymentRequest request);
 }

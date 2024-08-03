@@ -1,4 +1,4 @@
-using Core.Enums;
+using Application.DTOs.Payment;
 using Core.Exceptions;
 using Core.Interfaces;
 
@@ -6,13 +6,12 @@ namespace Application.UseCases.Payment.Update;
 
 public class UpdatePaymentUseCase(IUnitOfWork unitOfWork) : IUpdatePaymentUseCase
 {
-    public async Task<Core.Entities.Payment> ExecuteAsync(Guid paymentId, PaymentStatus status)
+    public async Task<PaymentResponse> ExecuteAsync(Guid paymentId, PaymentUpdateRequest request)
     {
         var payment = await unitOfWork.PaymentRepository.GetPaymentByIdAsync(paymentId);
         if (payment is null) throw new NotFoundException("Payment not found");
-
-        payment.Status = status;
-        payment.UpdatedAt = DateTime.UtcNow;
+        
+        payment.UpdatePayment(request);
 
         await unitOfWork.BeginTransactionAsync();
         try
@@ -20,7 +19,7 @@ public class UpdatePaymentUseCase(IUnitOfWork unitOfWork) : IUpdatePaymentUseCas
             await unitOfWork.PaymentRepository.UpdatePaymentAsync(payment);
             await unitOfWork.CommitTransactionAsync();
 
-            return payment;
+            return payment.MapToPaymentResponse();
         }
         catch (Exception e) when (e is not NotFoundException)
         {

@@ -1,8 +1,8 @@
-using Core.Enums;
+using Application.DTOs.Payment;
 
 namespace Application.UseCases.Payment.Update;
 
 public interface IUpdatePaymentUseCase
 {
-    public Task<Core.Entities.Payment> ExecuteAsync(Guid paymentId, PaymentStatus status);
+    public Task<PaymentResponse> ExecuteAsync(Guid paymentId, PaymentUpdateRequest request);
 }

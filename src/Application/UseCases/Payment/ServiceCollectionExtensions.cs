@@ -1,4 +1,5 @@
 using Application.UseCases.Payment.Create;
+using Application.UseCases.Payment.Delete;
 using Application.UseCases.Payment.GetById;
 using Application.UseCases.Payment.GetBySaleId;
 using Application.UseCases.Payment.GetTotalPaymentsForCustomer;
@@ -17,8 +18,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<GetPaymentByIdUseCase>();
         services.AddScoped<GetPaymentsBySaleIdUseCaseUseCase>();
         services.AddScoped<GetRemainingBalanceForCustomerUseCase>();
-        services.AddScoped<GetTotalPaymentsForCustomerUseCase>();
+        services.AddScoped<GetPaymentsForCustomerUseCase>();
         services.AddScoped<UpdatePaymentUseCase>();
+        services.AddScoped<DeletePaymentUseCase>();
 
         return services;
     }

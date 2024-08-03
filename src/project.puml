@@ -62,6 +62,20 @@ entity CustomerPreferences {
     UpdatedAt: DateTime
 }
 
+entity Payment {
+    + Id: Guid [PK]
+    --
+    SaleId: Guid [FK]
+    Amount: decimal
+    PaymentDate: DateTime
+    Status: string
+    PaymentMethod: string
+    TransactionId: string
+    CreatedAt: DateTime
+    UpdatedAt: DateTime
+}
+
+Sale ||--o{ Payment : "has payments"
 Customer ||--o{ Sale : "makes"
 Sale ||--o{ SaleDetail : "contains"
 Product ||--o{ SaleDetail : "is part of"

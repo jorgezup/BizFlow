@@ -9,4 +9,5 @@ public interface IPaymentRepository
     Task<IEnumerable<Payment>> GetPaymentsBySaleIdsAsync(IEnumerable<Guid> saleIds);
     Task AddPaymentAsync(Payment payment);
     Task UpdatePaymentAsync(Payment payment);
+    Task DeletePaymentAsync(Guid paymentId);
 }

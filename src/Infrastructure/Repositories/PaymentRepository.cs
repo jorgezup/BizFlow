@@ -34,4 +34,13 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
         appDbContext.Payments.Update(payment);
         return Task.CompletedTask;
     }
+
+    public async Task DeletePaymentAsync(Guid paymentId)
+    {
+        var payment = await appDbContext.Payments.FindAsync(paymentId);
+        if (payment is not null)
+        {
+            appDbContext.Payments.Remove(payment);
+        }
+    }
 }

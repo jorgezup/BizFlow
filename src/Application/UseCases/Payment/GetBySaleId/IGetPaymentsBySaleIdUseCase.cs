@@ -1,6 +1,8 @@
+using Application.DTOs.Payment;
+
 namespace Application.UseCases.Payment.GetPaymentBySaleId;
 
 public interface IGetPaymentsBySaleIdUseCase
 {
-    public Task<IEnumerable<Core.Entities.Payment>> ExecuteAsync(Guid saleId);
+    public Task<IEnumerable<PaymentResponse>> ExecuteAsync(Guid saleId);
 }

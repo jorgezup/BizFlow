@@ -1,5 +1,6 @@
 using Application.DTOs.Payment;
 using Application.UseCases.Payment.Create;
+using Application.UseCases.Payment.Delete;
 using Application.UseCases.Payment.GetById;
 using Application.UseCases.Payment.GetBySaleId;
 using Application.UseCases.Payment.GetRemainingBalanceForCustomer;
@@ -19,23 +20,29 @@ public class PaymentController(
     GetPaymentByIdUseCase getPaymentByIdUseCase,
     GetPaymentsBySaleIdUseCaseUseCase getPaymentsBySaleIdUseCaseUseCase,
     GetRemainingBalanceForCustomerUseCase getRemainingBalanceForCustomerUseCase,
-    GetTotalPaymentsForCustomerUseCase getTotalPaymentsForCustomerUseCase,
-    UpdatePaymentUseCase updatePaymentUseCase) : ControllerBase
+    GetPaymentsForCustomerUseCase getPaymentsForCustomerUseCase,
+    UpdatePaymentUseCase updatePaymentUseCase,
+    DeletePaymentUseCase deletePaymentUseCase) : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreatePayment([FromBody] PaymentRequest request)
+    public async Task<IActionResult> CreatePayment(PaymentRequest request)
     {
         try
         {
             var response = await createPaymentUseCase.ExecuteAsync(request);
-            return CreatedAtAction(nameof(GetPaymentById), new { id = response.Id }, response);
+            return CreatedAtAction(nameof(GetPaymentById), new { response.id }, response);
         }
         catch (BadRequestException e)
         {
             return BadRequest(new { message = e.Message });
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
         }
         catch (Exception e)
         {
@@ -131,8 +138,63 @@ public class PaymentController(
     {
         try
         {
-            var response = await getTotalPaymentsForCustomerUseCase.ExecuteAsync(customerId);
+            var response = await getPaymentsForCustomerUseCase.ExecuteAsync(customerId);
             return Ok(response);
+        }
+        catch (BadRequestException e)
+        {
+            return BadRequest(new { message = e.Message });
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = e.Message });
+        }
+    }
+
+    [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdatePayment(Guid paymentId, PaymentUpdateRequest request)
+    {
+        try
+        {
+            var response = await updatePaymentUseCase.ExecuteAsync(paymentId, request);
+            return Ok(response);
+        }
+        catch (BadRequestException e)
+        {
+            return BadRequest(new { message = e.Message });
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = e.Message });
+        }
+    }
+    
+
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeletePayment(Guid id)
+    {
+        try
+        {
+            var response = await deletePaymentUseCase.ExecuteAsync(id);
+            if (!response)
+                return NotFound();
+            return NoContent();
         }
         catch (BadRequestException e)
         {

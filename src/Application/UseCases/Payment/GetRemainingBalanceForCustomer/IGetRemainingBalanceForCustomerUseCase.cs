@@ -1,6 +1,8 @@
+using Application.DTOs.Payment;
+
 namespace Application.UseCases.Payment.GetRemainingBalanceForCustomer;
 
 public interface IGetRemainingBalanceForCustomerUseCase
 {
-    public Task<decimal> ExecuteAsync(Guid customerId);
+    public Task<IEnumerable<PaymentBalanceResponse>> ExecuteAsync(Guid customerId);
 }

@@ -1,3 +1,4 @@
+using Application.DTOs.Payment;
 using Application.UseCases.Payment.GetPaymentBySaleId;
 using Core.Exceptions;
 using Core.Interfaces;
@@ -6,7 +7,7 @@ namespace Application.UseCases.Payment.GetBySaleId;
 
 public class GetPaymentsBySaleIdUseCaseUseCase(IUnitOfWork unitOfWork) : IGetPaymentsBySaleIdUseCase
 {
-    public async Task<IEnumerable<Core.Entities.Payment>> ExecuteAsync(Guid saleId)
+    public async Task<IEnumerable<PaymentResponse>> ExecuteAsync(Guid saleId)
     {
         try
         {
@@ -15,7 +16,7 @@ public class GetPaymentsBySaleIdUseCaseUseCase(IUnitOfWork unitOfWork) : IGetPay
             if (payments is null)
                 throw new NotFoundException("Payments not found");
 
-            return payments;
+            return payments.Select(p => p.MapToPaymentResponse());
         }
         catch (Exception e) when (e is not NotFoundException)
         {

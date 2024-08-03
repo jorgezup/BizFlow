@@ -1,23 +1,17 @@
+using Application.DTOs.Payment;
 using Core.Enums;
-using Core.Exceptions;
 using Core.Interfaces;
 
 namespace Application.UseCases.Payment.GetRemainingBalanceForCustomer;
 
 public class GetRemainingBalanceForCustomerUseCase(IUnitOfWork unitOfWork) : IGetRemainingBalanceForCustomerUseCase
 {
-    public async Task<decimal> ExecuteAsync(Guid customerId)
+    public async Task<IEnumerable<PaymentBalanceResponse>> ExecuteAsync(Guid customerId)
     {
         try
         {
-            var sales = (await unitOfWork.SaleRepository.GetSalesByCustomerIdAsync(customerId)).ToList();
-            if (sales.Count is 0)
-                throw new NotFoundException($"Sales by customer: {customerId} not found");
-
-            var totalAmount = sales.Sum(s => s.TotalAmount);
-            
-            var totalPayments = await GetTotalPaymentsForCustomerAsync(customerId);
-            return totalAmount - totalPayments;
+            var paymentBalanceResponses = await GetPaymentBalanceResponsesForCustomerAsync(customerId);
+            return paymentBalanceResponses;
         }
         catch (Exception e)
         {
@@ -25,12 +19,22 @@ public class GetRemainingBalanceForCustomerUseCase(IUnitOfWork unitOfWork) : IGe
         }
     }
 
-    private async Task<decimal> GetTotalPaymentsForCustomerAsync(Guid customerId)
+    private async Task<IEnumerable<PaymentBalanceResponse>> GetPaymentBalanceResponsesForCustomerAsync(Guid customerId)
     {
         var sales = await unitOfWork.SaleRepository.GetSalesByCustomerIdAsync(customerId);
-        var saleIds = sales.Select(s => s.Id);
-        return (await unitOfWork.PaymentRepository.GetPaymentsBySaleIdsAsync(saleIds))
-            .Where(p => p.Status == PaymentStatus.Completed)
-            .Sum(p => p.Amount);
+        var enumerable = sales.ToList();
+        var saleIds = enumerable.Select(s => s.Id);
+        var payments = await unitOfWork.PaymentRepository.GetPaymentsBySaleIdsAsync(saleIds);
+        var completedPayments = payments.Where(p => p.Status == PaymentStatus.Completed);
+
+        var paymentBalanceResponses = completedPayments.ToList()
+            .GroupBy(p => p.SaleId)
+            .Select(group => new PaymentBalanceResponse(
+                group.Key,
+                group.Sum(p => p.Amount),
+                enumerable.First(s => s.Id == group.Key).TotalAmount - group.Sum(p => p.Amount))
+            ).ToList();
+
+        return paymentBalanceResponses;
     }
 }
