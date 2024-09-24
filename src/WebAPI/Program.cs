@@ -94,7 +94,7 @@ public abstract class Program
                         app.UseRouting();
                         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-                        if (!app.ApplicationServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment()) return;
+                        // if (!app.ApplicationServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment()) return;
                         
                         app.UseSwagger();
                         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BizFlow v1"));
