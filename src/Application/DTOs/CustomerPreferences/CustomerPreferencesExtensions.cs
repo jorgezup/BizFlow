@@ -8,8 +8,11 @@ public static class CustomerPreferencesExtensions
         return new CustomerPreferencesResponse(
             customerPreferences.Id,
             customerPreferences.CustomerId,
+            customerPreferences.Customer.Name,
             customerPreferences.ProductId,
-            customerPreferences.PreferredPurchaseDays,
+            customerPreferences.Product.Name,
+            customerPreferences.Quantity,
+            customerPreferences.PreferredPurchaseDay,
             customerPreferences.CreatedAt,
             customerPreferences.UpdatedAt);
     }
@@ -21,7 +24,8 @@ public static class CustomerPreferencesExtensions
         {
             CustomerId = customerPreferencesRequest.CustomerId,
             ProductId = customerPreferencesRequest.ProductId,
-            PreferredPurchaseDays = customerPreferencesRequest.PreferredPurchaseDays,
+            Quantity = customerPreferencesRequest.Quantity,
+            PreferredPurchaseDay = customerPreferencesRequest.PreferredPurchaseDay,
         };
     }
 }

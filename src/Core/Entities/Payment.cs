@@ -6,14 +6,23 @@ namespace Core.Entities;
 public class Payment
 {
     public Guid Id { get; set; }
-    public Guid SaleId { get; set; }
-    [Column(TypeName = "decimal(18,2)")] public decimal Amount { get; set; }
+
+    // Mark CustomerId as the foreign key for the Customer property
+    [ForeignKey("Order")]
+    public Guid OrderId { get; set; }
+
+    [Column(TypeName = "decimal(18,4)")] 
+    public decimal Amount { get; set; }
+    
     public DateTime PaymentDate { get; set; }
-    [Column(TypeName = "varchar(30)")] public PaymentStatus Status { get; set; }
-    [Column(TypeName = "varchar(30)")] public PaymentMethod PaymentMethod { get; set; }
-    [Column(TypeName = "varchar(50)")] public string TransactionId { get; set; } = string.Empty;
+    
+    [Column(TypeName = "varchar(30)")] 
+    public PaymentMethod PaymentMethod { get; set; }
+    
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
-    public Sale Sale { get; set; }
+    // Navigation property to Order
+    public Order Order { get; set; }
+
 }

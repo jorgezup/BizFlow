@@ -13,9 +13,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IPriceHistoryRepository, PriceHistoryRepository>();
         services.AddScoped<ICustomerPreferencesRepository, CustomerPreferencesRepository>();
-        services.AddScoped<ISaleRepository, SaleRepository>();
         services.AddScoped<ISaleDetailRepository, SaleDetailRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IOrderLifeCycleRepository, OrderLifeCycleRepository>();
         
         services.AddScoped<IUnitOfWork, UnitOfWork>();
     }

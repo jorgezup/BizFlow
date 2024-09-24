@@ -1,4 +1,4 @@
-using Application.DTOs.Payment;
+using Core.DTOs;
 
 namespace Application.UseCases.Payment.GetById;
 

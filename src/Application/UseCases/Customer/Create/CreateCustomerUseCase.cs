@@ -23,7 +23,7 @@ public class CreateCustomerUseCase(
         try
         {
             var customerFound = await unitOfWork.CustomerRepository.GetByEmailAsync(request.Email);
-            if (customerFound != null)
+            if (customerFound != null && !string.IsNullOrWhiteSpace(customerFound.Email))
                 throw new ConflictException("Email already in use when creating");
 
             var customer = request.MapToCustomer();

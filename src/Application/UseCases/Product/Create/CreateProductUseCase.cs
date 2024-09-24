@@ -1,13 +1,16 @@
 using Application.DTOs.Product;
+using Application.Events;
 using Core.Exceptions;
 using Core.Interfaces;
 using FluentValidation;
+using MediatR;
 
 namespace Application.UseCases.Product.Create;
 
 public class CreateProductUseCase(
     IUnitOfWork unitOfWork,
-    IValidator<ProductRequest> validator) : ICreateProductUseCase
+    IValidator<ProductRequest> validator,
+    IMediator mediator) : ICreateProductUseCase
 {
     public async Task<ProductResponse> ExecuteAsync(ProductRequest request)
     {
@@ -24,18 +27,11 @@ public class CreateProductUseCase(
         try
         {
             var product = request.MapToProduct();
-
-            var priceHistory = new Core.Entities.PriceHistory
-            {
-                ProductId = product.Id,
-                Price = product.Price,
-                Product = product
-            };
-
+            
             await unitOfWork.ProductRepository.AddAsync(product);
 
             // Add price history
-            await unitOfWork.PriceHistoryRepository.AddAsync(priceHistory);
+            await mediator.Publish(new PriceEvent(product.Id, product.Price));
             
             await unitOfWork.CommitTransactionAsync();
 

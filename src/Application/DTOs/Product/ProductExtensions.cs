@@ -31,9 +31,9 @@ public static class ProductExtensions
     public static Core.Entities.Product UpdateProduct(this Core.Entities.Product product,
         ProductUpdateRequest productUpdateRequest)
     {
-        product.Name = string.IsNullOrWhiteSpace(productUpdateRequest.Name)
-            ? product.Name
-            : productUpdateRequest.Name;
+        // product.Name = string.IsNullOrWhiteSpace(productUpdateRequest.Name)
+        //     ? product.Name
+        //     : productUpdateRequest.Name;
         product.Description = string.IsNullOrWhiteSpace(productUpdateRequest.Description)
             ? product.Description
             : productUpdateRequest.Description;

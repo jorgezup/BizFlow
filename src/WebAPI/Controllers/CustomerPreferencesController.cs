@@ -51,7 +51,6 @@ public class CustomerPreferencesController(
 
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<CustomerPreferencesResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllCustomerPreferences()
     {
@@ -59,10 +58,6 @@ public class CustomerPreferencesController(
         {
             var response = await getAllCustomerPreferencesUseCase.ExecuteAsync();
             return Ok(response);
-        }
-        catch (NotFoundException)
-        {
-            return NotFound();
         }
         catch (Exception e)
         {

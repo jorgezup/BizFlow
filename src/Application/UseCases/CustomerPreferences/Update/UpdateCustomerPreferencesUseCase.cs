@@ -12,9 +12,9 @@ public class UpdateCustomerPreferencesUseCase(
 {
     public async Task<CustomerPreferencesResponse> ExecuteAsync(Guid id, UpdateCustomerPreferencesRequest request)
     {
-        var customerPreferences = await unitOfWork.CustomerPreferencesRepository.GetByIdAsync(id);
+        var customerPreference = await unitOfWork.CustomerPreferencesRepository.GetByIdAsync(id);
 
-        if (customerPreferences == null)
+        if (customerPreference == null)
             throw new NotFoundException("Customer preferences not found");
 
         var validationResult = await validator.ValidateAsync(request);
@@ -23,19 +23,21 @@ public class UpdateCustomerPreferencesUseCase(
             throw new DataContractValidationException("Invalid customer preferences data when updating",
                 validationResult.Errors);
 
-        customerPreferences.PreferredPurchaseDays.Clear();
-        customerPreferences.PreferredPurchaseDays.AddRange(request.PreferredPurchaseDays);
-        
-        customerPreferences.UpdatedAt = DateTime.UtcNow;
+        customerPreference.PreferredPurchaseDay = request.PreferredPurchaseDays;
+        customerPreference.Quantity = request.Quantity;
+        customerPreference.UpdatedAt = DateTime.UtcNow;
 
         await unitOfWork.BeginTransactionAsync();
 
         try
         {
-            await unitOfWork.CustomerPreferencesRepository.UpdateAsync(customerPreferences);
+            await unitOfWork.CustomerPreferencesRepository.UpdateAsync(customerPreference);
             await unitOfWork.CommitTransactionAsync();
+            
+            customerPreference.Customer = await unitOfWork.CustomerRepository.GetByIdAsync(customerPreference.CustomerId);
+            customerPreference.Product = await unitOfWork.ProductRepository.GetByIdAsync(customerPreference.ProductId);
 
-            return customerPreferences.MapToCustomerPreferencesResponse();
+            return customerPreference.MapToCustomerPreferencesResponse();
         }
         catch (Exception ex) when (ex is not DataContractValidationException and not NotFoundException)
         {

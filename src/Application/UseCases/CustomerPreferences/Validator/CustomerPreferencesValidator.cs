@@ -9,9 +9,12 @@ public class CustomerPreferencesValidator : AbstractValidator<CustomerPreference
     {
         RuleFor(x => x.CustomerId).NotEmpty().WithMessage("Id is required.");
         RuleFor(x => x.ProductId).NotEmpty().WithMessage("Id is required.");
-        RuleForEach(x => x.PreferredPurchaseDays)
-            .NotEmpty().WithMessage("PreferredPurchaseDays is required.")
-            .Must(BeAValidDayOfWeek).WithMessage("PreferredPurchaseDays must be a valid day of the week.");
+        RuleFor(x => x.PreferredPurchaseDay)
+            .NotEmpty().WithMessage("PreferredPurchaseDay is required.")
+            .Must(BeAValidDayOfWeek).WithMessage("PreferredPurchaseDay must be a valid day of the week.");
+        RuleFor(x => x.Quantity)
+            .NotNull().WithMessage("Quantity is required.")
+            .GreaterThan(0).WithMessage("Quantity must be greater than 0.");
     }
 
     private bool BeAValidDayOfWeek(string day)

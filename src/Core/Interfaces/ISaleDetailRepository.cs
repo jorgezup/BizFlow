@@ -1,13 +1,14 @@
+using Core.DTOs;
 using Core.Entities;
 
 namespace Core.Interfaces;
 
 public interface ISaleDetailRepository
 {
-    Task<SaleDetail?> GetByIdAsync(Guid id);
-    Task<IEnumerable<SaleDetail>> GetAllAsync();
-    Task<IEnumerable<SaleDetail>> GetBySaleIdAsync(Guid id);
-    Task AddAsync(SaleDetail saleDetail);
-    Task UpdateAsync(SaleDetail saleDetail);
+    Task<OrderDetailResponse?> GetByIdAsync(Guid id);
+    Task<List<OrderDetailResponse>> GetAllAsync();
+    Task<List<OrderDetailResponse>> GetByOrderIdAsync(Guid id);
+    Task AddAsync(OrderDetail orderDetail);
+    Task UpdateAsync(OrderDetail orderDetail);
     Task DeleteAsync(Guid id);
 }

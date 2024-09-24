@@ -11,12 +11,8 @@ public class GetAllProductsUseCase(IUnitOfWork unitOfWork) : IGetAllProductsUseC
         try
         {
             var products = await unitOfWork.ProductRepository.GetAllAsync();
-            var productsList = products.ToList();
 
-            if (productsList.Count is 0)
-                throw new NotFoundException("No products found");
-
-            return productsList.Select(c => c.MapToProductResponse());
+            return products.Select(c => c.MapToProductResponse());
         }
         catch (Exception ex) when (ex is not NotFoundException)
         {

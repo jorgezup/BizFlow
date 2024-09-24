@@ -10,6 +10,7 @@ public class GetAllCustomerPreferencesUseCase(IUnitOfWork unitOfWork) : IGetAllC
         try
         {
             var customerPreferences = await unitOfWork.CustomerPreferencesRepository.GetAllAsync();
+
             return customerPreferences.Select(x => x.MapToCustomerPreferencesResponse());
         }
         catch (Exception e)

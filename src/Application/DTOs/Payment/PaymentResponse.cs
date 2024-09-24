@@ -1,11 +1,11 @@
 namespace Application.DTOs.Payment;
 
 public record PaymentResponse(
-    Guid id,
-    Guid saleId,
-    decimal amount,
-    DateTime paymentDate,
-    string paymentMethod,
-    string paymentStatus,
-    DateTime createdAt,
-    DateTime updatedAt);
+    Guid Id,
+    Guid OrderId,
+    Guid CustomerId,
+    decimal Amount,
+    DateTime PaymentDate,
+    string PaymentMethod,
+    DateTime CreatedAt,
+    DateTime UpdatedAt);

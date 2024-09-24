@@ -11,19 +11,20 @@ public class UnitOfWork(
     ICustomerRepository customerRepository,
     IPriceHistoryRepository priceHistoryRepository,
     ICustomerPreferencesRepository customerPreferencesRepository,
-    ISaleRepository saleRepository,
     ISaleDetailRepository saleDetailRepository,
-    IPaymentRepository paymentRepository)
+    IPaymentRepository paymentRepository,
+    IOrderRepository orderRepository,
+    IOrderLifeCycleRepository orderLifeCycleRepository)
     : IUnitOfWork
 {
     public IProductRepository ProductRepository { get; } = productRepository;
     public ICustomerRepository CustomerRepository { get; } = customerRepository;
     public IPriceHistoryRepository PriceHistoryRepository { get; } = priceHistoryRepository;
     public ICustomerPreferencesRepository CustomerPreferencesRepository { get; } = customerPreferencesRepository;
-    public ISaleDetailRepository SaleDetailRepository { get; } = saleDetailRepository;
-    public ISaleRepository SaleRepository { get; } = saleRepository;
-
+    public ISaleDetailRepository OrderDetailRepository { get; } = saleDetailRepository;
     public IPaymentRepository PaymentRepository { get; } = paymentRepository;
+    public IOrderRepository OrderRepository { get; } = orderRepository;
+    public IOrderLifeCycleRepository OrderLifeCycleRepository { get; } = orderLifeCycleRepository;
 
     private IDbContextTransaction? _transaction;
 

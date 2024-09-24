@@ -1,4 +1,4 @@
-using Application.DTOs.Payment;
+using Core.DTOs;
 using Core.Exceptions;
 using Core.Interfaces;
 
@@ -15,7 +15,7 @@ public class GetPaymentByIdUseCase(IUnitOfWork unitOfWork) : IGetPaymentByIdUseC
             if (payment is null)
                 throw new NotFoundException("Payment not found");
             
-            return payment.MapToPaymentResponse();
+            return payment;
         }
         catch (Exception e) when (e is not NotFoundException)
         {

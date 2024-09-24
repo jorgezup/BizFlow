@@ -20,7 +20,6 @@ public class ProductController(
 {
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<ProductResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllProducts()
     {
@@ -28,10 +27,6 @@ public class ProductController(
         {
             var productsOutput = await getAllProductsUseCase.ExecuteAsync();
             return Ok(productsOutput);
-        }
-        catch (NotFoundException)
-        {
-            return NotFound();
         }
         catch (Exception e)
         {

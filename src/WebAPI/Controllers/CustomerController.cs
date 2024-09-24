@@ -22,7 +22,6 @@ public class CustomerController(
 {
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<CustomerResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllCustomers()
     {
@@ -30,10 +29,6 @@ public class CustomerController(
         {
             var customersOutput = await getAllCustomersUseCase.ExecuteAsync();
             return Ok(customersOutput);
-        }
-        catch (NotFoundException)
-        {
-            return NotFound();
         }
         catch (Exception e)
         {

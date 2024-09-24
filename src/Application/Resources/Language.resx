@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="CustomerInvoice" xml:space="preserve">
+        <value>Customer Invoice</value>
+    </data>
+    <data name="ThankYou" xml:space="preserve">
+        <value>Thank you for your business!</value>
+    </data>
+    <data name="Name" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="Email" xml:space="preserve">
+        <value>Email</value>
+    </data>
+    <data name="Address" xml:space="preserve">
+        <value>Address</value>
+    </data>
+    <data name="Date" xml:space="preserve">
+        <value>Date</value>
+    </data>
+    <data name="InvoicePeriod" xml:space="preserve">
+        <value>Invoice Period</value>
+    </data>
+    <data name="TotalOrders" xml:space="preserve">
+        <value>Total Orders</value>
+    </data>
+    <data name="TotalAmount" xml:space="preserve">
+        <value>Total Amount</value>
+    </data>
+    <data name="OrdersSummary" xml:space="preserve">
+        <value>Orders Summary</value>
+    </data>
+    <data name="Product" xml:space="preserve">
+        <value>Product</value>
+    </data>
+    <data name="Subtotal" xml:space="preserve">
+        <value>Subtotal</value>
+    </data>
+    <data name="OrderID" xml:space="preserve">
+        <value>OrderId</value>
+    </data>
+    <data name="TotalOrderValue" xml:space="preserve">
+        <value>Total Order Value</value>
+    </data>
+    <data name="Quantity" xml:space="preserve">
+        <value>Quantity</value>
+    </data>
+    <data name="UnitPrice" xml:space="preserve">
+        <value>UnitPrice</value>
+    </data>
+    <data name="OrderDate" xml:space="preserve">
+        <value>OrderDate</value>
+    </data>
+    <data name="NoOrdersInvoice" xml:space="preserve">
+        <value>No orders found for the specified customer and date range.</value>
+    </data>
+    <data name="InvoicesBadRequest" xml:space="preserve">
+        <value>The range of dates cannot be more than 60 days or Start date cannot be greater than end date.</value>
+    </data>
+</root>

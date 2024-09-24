@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Application;
+using Application.UseCases.Order.Update;
 using Asp.Versioning;
 using Core.Interfaces;
 using Infrastructure;
@@ -7,6 +8,7 @@ using Infrastructure.Data;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
 
 namespace WebAPI;
 
@@ -26,6 +28,8 @@ public abstract class Program
 
     private static IHostBuilder CreateHostBuilder(string[] args)
     {
+        var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        
         return Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
             {
@@ -52,6 +56,27 @@ public abstract class Program
                             options.SubstituteApiVersionInUrl = true;
                         });
 
+                        services.AddCors(options =>
+                        {
+                            options.AddPolicy(name: MyAllowSpecificOrigins,
+                                policy  =>
+                                {
+                                    policy.WithOrigins("http://localhost:3000")
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod();
+                                });
+                        });
+
+                        services.AddMediatR(config => 
+                        {
+                            config.RegisterServicesFromAssembly(typeof(UpdateOrderStatusUseCase).Assembly);
+                        });
+                        
+                        services.AddControllers().AddNewtonsoftJson(options =>
+                        {
+                            options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                        });
+                        
                         services.AddInfrastructureServices();
                         services.AddApplicationServices();
 
@@ -61,13 +86,16 @@ public abstract class Program
                                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BizFlow API", Version = "v1" });
                             });
                     })
+                    
                     .Configure(app =>
                     {
+                        app.UseCors(MyAllowSpecificOrigins);
+                        
                         app.UseRouting();
                         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
                         if (!app.ApplicationServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment()) return;
-
+                        
                         app.UseSwagger();
                         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BizFlow v1"));
                     });

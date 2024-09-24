@@ -9,12 +9,18 @@ public class CustomerPreferencesRepository(AppDbContext appDbContext) : ICustome
 {
     public async Task<CustomerPreferences?> GetByIdAsync(Guid id)
     {
-        return await appDbContext.CustomerPreferences.FindAsync(id);
+        return await appDbContext.CustomerPreferences
+            .Include(cp => cp.Customer)
+            .Include(cp => cp.Product)
+            .FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<IEnumerable<CustomerPreferences>> GetAllAsync()
     {
-        return await appDbContext.CustomerPreferences.ToListAsync();
+        return await appDbContext.CustomerPreferences
+            .Include(cp => cp.Customer)
+            .Include(cp => cp.Product)
+            .ToListAsync();
     }
 
     public async Task AddAsync(CustomerPreferences customerPreferences)

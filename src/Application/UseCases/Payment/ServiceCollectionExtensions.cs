@@ -1,9 +1,8 @@
 using Application.UseCases.Payment.Create;
 using Application.UseCases.Payment.Delete;
+using Application.UseCases.Payment.GetAll;
 using Application.UseCases.Payment.GetById;
-using Application.UseCases.Payment.GetBySaleId;
-using Application.UseCases.Payment.GetTotalPaymentsForCustomer;
-using Application.UseCases.Payment.GetRemainingBalanceForCustomer;
+using Application.UseCases.Payment.GetPendingPayments;
 using Application.UseCases.Payment.Update;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,11 +15,10 @@ public static class ServiceCollectionExtensions
         //Add UseCases
         services.AddScoped<CreatePaymentUseCase>();
         services.AddScoped<GetPaymentByIdUseCase>();
-        services.AddScoped<GetPaymentsBySaleIdUseCaseUseCase>();
-        services.AddScoped<GetRemainingBalanceForCustomerUseCase>();
-        services.AddScoped<GetPaymentsForCustomerUseCase>();
+        services.AddScoped<GetAllPaymentsUseCase>();
         services.AddScoped<UpdatePaymentUseCase>();
         services.AddScoped<DeletePaymentUseCase>();
+        services.AddScoped<GetPendingPaymentsUseCase>();
 
         return services;
     }

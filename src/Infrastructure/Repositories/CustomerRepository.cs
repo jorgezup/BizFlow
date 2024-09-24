@@ -9,12 +9,16 @@ public class CustomerRepository(AppDbContext appDbContext) : ICustomerRepository
 {
     public async Task<IEnumerable<Customer>> GetAllAsync()
     {
-        return await appDbContext.Customers.ToListAsync();
+        return await appDbContext.Customers
+            .Where(c => c.IsActive)
+            .ToListAsync();
     }
 
     public async Task<Customer?> GetByIdAsync(Guid id)
     {
-        return await appDbContext.Customers.FirstOrDefaultAsync(x => x.Id == id);
+        return await appDbContext.Customers
+            .Where(c => c.IsActive)
+            .FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task AddAsync(Customer customer)
@@ -30,16 +34,19 @@ public class CustomerRepository(AppDbContext appDbContext) : ICustomerRepository
 
     public async Task DeleteAsync(Guid id)
     {
-        var customer = await appDbContext.Customers.FindAsync(id);
+        var customer = await GetByIdAsync(id);
         if (customer is not null)
         {
-            appDbContext.Customers.Remove(customer);
+            customer.IsActive = false;
+            appDbContext.Customers.Update(customer);
         }
     }
 
     public async Task<Customer?> GetByEmailAsync(string? customerEmail)
     {
-        var customer = await appDbContext.Customers.FirstOrDefaultAsync(x => x.Email == customerEmail);
+        var customer = await appDbContext.Customers
+            .Where(c => c.IsActive)
+            .FirstOrDefaultAsync(x => x.Email == customerEmail);
         return customer;
     }
 }

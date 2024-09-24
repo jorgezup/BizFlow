@@ -1,7 +1,7 @@
 namespace Application.DTOs.Payment;
 
 public record PaymentUpdateRequest(
-    decimal? amount,
-    DateTime? paymentDate,
-    string? paymentMethod,
-    string? status);
+    Guid OrderId,
+    decimal? Amount,
+    DateTime? PaymentDate,
+    string? PaymentMethod);

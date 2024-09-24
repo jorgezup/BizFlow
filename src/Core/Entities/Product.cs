@@ -15,15 +15,14 @@ public class Product
     [Column(TypeName = "varchar(200)")]
     public required string UnitOfMeasure { get; set; }
 
-    [Column(TypeName = "decimal(18,2)")]
+    [Column(TypeName = "decimal(18,4)")]
     public decimal Price { get; set; }
+    
+    [Column(TypeName = "bit")]
+    public bool IsActive { get; set; } = true;
 
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; set; }
 
-    public List<PriceHistory> PriceHistories { get; init; } = null!;
-        
-    public List<SaleDetail> SaleDetails { get; init; } = null!;
-
-    public List<CustomerPreferences> CustomerPreferences { get; init; } = null!;
+    public List<PriceHistory> PriceHistories { get; init; } = [];
 }

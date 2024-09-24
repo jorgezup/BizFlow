@@ -17,6 +17,12 @@ public class GetCustomerPreferencesByCustomerIdUseCase(IUnitOfWork unitOfWork)
             var customerPreferencesByCustomerIdList = customerPreferencesByCustomerId.ToList();
             if (customerPreferencesByCustomerIdList.Count is 0)
                 throw new NotFoundException("Customer preferences not found");
+            
+            foreach (var customerPreference in customerPreferencesByCustomerIdList)
+            {
+                customerPreference.Customer = await unitOfWork.CustomerRepository.GetByIdAsync(customerPreference.CustomerId);
+                customerPreference.Product = await unitOfWork.ProductRepository.GetByIdAsync(customerPreference.ProductId);
+            }
 
             return customerPreferencesByCustomerIdList.Select(x => x.MapToCustomerPreferencesResponse());
         }

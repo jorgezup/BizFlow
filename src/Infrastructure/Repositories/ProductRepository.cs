@@ -9,12 +9,16 @@ public class ProductRepository(AppDbContext appDbContext) : IProductRepository
 {
     public async Task<IEnumerable<Product>> GetAllAsync()
     {
-        return await appDbContext.Products.ToListAsync();
+        return await appDbContext.Products
+            .Where(p => p.IsActive)
+            .ToListAsync();
     }
 
     public async Task<Product?> GetByIdAsync(Guid id)
     {
-        return await appDbContext.Products.FindAsync(id);
+        return await appDbContext.Products
+            .Where(p => p.IsActive)
+            .FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task AddAsync(Product product)
@@ -30,16 +34,17 @@ public class ProductRepository(AppDbContext appDbContext) : IProductRepository
 
     public async Task DeleteAsync(Guid id)
     {
-        var product = await appDbContext.Products.FindAsync(id);
+        var product = await GetByIdAsync(id);
         if (product is not null)
         {
-            appDbContext.Products.Remove(product);
+            product.IsActive = false;
+            appDbContext.Products.Update(product);
         }
     }
 
     public async Task<Product?> GetByNameAsync(string name)
     {
-        var product = await appDbContext.Products.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
-        return product;
+        var products = await GetAllAsync();
+        return products.FirstOrDefault(p => p.Name == name);
     }
 }

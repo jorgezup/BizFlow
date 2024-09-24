@@ -8,12 +8,15 @@ public class CustomerPreferences
     public Guid CustomerId { get; init; }
     public Guid ProductId { get; init; }
 
-    [Column(TypeName = "varchar(200)")]
-    public List<string> PreferredPurchaseDays { get; set; } = [];
+    [Column(TypeName = "varchar(20)")]
+    public string PreferredPurchaseDay { get; set; }
 
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal Quantity { get; set; }
+    
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-    public Customer Customer { get; init; } = null!;
-    public Product Product { get; init; } = null!;
+    public Customer Customer { get; set; }
+    public Product Product { get; set; }
 }

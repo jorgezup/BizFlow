@@ -1,10 +1,12 @@
 using Application.DTOs.Product;
+using Application.Events;
 using Core.Exceptions;
 using Core.Interfaces;
+using MediatR;
 
 namespace Application.UseCases.Product.Update;
 
-public class UpdateProductUseCase(IUnitOfWork unitOfWork) : IUpdateProductUseCase
+public class UpdateProductUseCase(IUnitOfWork unitOfWork, IMediator mediator) : IUpdateProductUseCase
 {
     public async Task<ProductResponse> ExecuteAsync(Guid productId, ProductUpdateRequest productUpdateRequest)
     {
@@ -16,20 +18,15 @@ public class UpdateProductUseCase(IUnitOfWork unitOfWork) : IUpdateProductUseCas
         if (productUpdateRequest.Price <= 0)
             throw new BadRequestException("Price must be greater than zero");
 
-        if (existingProduct.Price == productUpdateRequest.Price)
-            throw new ConflictException("Price cannot be the same as the current price");
-
-        var priceHistory = new Core.Entities.PriceHistory
-        {
-            ProductId = productId,
-            Price = (decimal)productUpdateRequest.Price!
-        };
-
         await unitOfWork.BeginTransactionAsync();
 
         try
         {
-            await unitOfWork.PriceHistoryRepository.AddAsync(priceHistory);
+            if (productUpdateRequest.Price is not null)
+            {
+                await mediator.Publish(new PriceEvent(productId, productUpdateRequest.Price.Value)); 
+            }
+            
             existingProduct.UpdateProduct(productUpdateRequest);
             await unitOfWork.ProductRepository.UpdateAsync(existingProduct);
             await unitOfWork.CommitTransactionAsync();
