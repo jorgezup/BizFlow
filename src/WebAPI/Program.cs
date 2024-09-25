@@ -26,8 +26,8 @@ public abstract class Program
 
     private static IHostBuilder CreateHostBuilder(string[] args)
     {
-        var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-        
+        var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         return Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
             {
@@ -57,7 +57,7 @@ public abstract class Program
                         services.AddCors(options =>
                         {
                             options.AddPolicy(name: MyAllowSpecificOrigins,
-                                policy  =>
+                                policy =>
                                 {
                                     // policy.WithOrigins("http://localhost:3000")
                                     policy.AllowAnyOrigin()
@@ -66,35 +66,34 @@ public abstract class Program
                                 });
                         });
 
-                        services.AddMediatR(config => 
+                        services.AddMediatR(config =>
                         {
                             config.RegisterServicesFromAssembly(typeof(UpdateOrderStatusUseCase).Assembly);
                         });
-                        
+
                         services.AddControllers().AddNewtonsoftJson(options =>
                         {
                             options.SerializerSettings.Converters.Add(new StringEnumConverter());
                         });
-                        
+
                         services.AddInfrastructureServices();
                         services.AddApplicationServices();
 
-                        if (context.HostingEnvironment.IsDevelopment())
-                            services.AddSwaggerGen(c =>
-                            {
-                                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BizFlow API", Version = "v1" });
-                            });
+                        // if (context.HostingEnvironment.IsDevelopment())
+                        services.AddSwaggerGen(c =>
+                        {
+                            c.SwaggerDoc("v1", new OpenApiInfo { Title = "BizFlow API", Version = "v1" });
+                        });
                     })
-                    
                     .Configure(app =>
                     {
                         app.UseCors(MyAllowSpecificOrigins);
-                        
+
                         app.UseRouting();
                         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
                         // if (!app.ApplicationServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment()) return;
-                        
+
                         app.UseSwagger();
                         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BizFlow v1"));
                     });
