@@ -21,14 +21,6 @@
             <Generator>ResXFileCodeGenerator</Generator>
             <LastGenOutput>Language.Designer.cs</LastGenOutput>
         </EmbeddedResource>
-        <EmbeddedResource Update="Resources\Language.en.resx">
-            <Generator>ResXFileCodeGenerator</Generator>
-            <LastGenOutput>Language.en.Designer.cs</LastGenOutput>
-        </EmbeddedResource>
-        <EmbeddedResource Update="Resources\Language.pt-br.resx">
-            <Generator>ResXFileCodeGenerator</Generator>
-            <LastGenOutput>Language.pt-br.Designer.cs</LastGenOutput>
-        </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
