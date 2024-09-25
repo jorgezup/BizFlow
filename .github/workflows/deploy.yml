@@ -1,4 +1,7 @@
-name: Build and deploy .NET 8 Web API to Azure Web App - bizflow-api
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy ASP.Net Core app to Azure Web App - bizflow-zupirolli
 
 on:
   push:
@@ -7,45 +10,47 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: windows-latest
 
     steps:
-      # Checkout do código-fonte
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # Configura a versão do .NET
-      - name: Set up .NET
+      - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '8.x'
 
-      # Restaurar dependências do projeto
-      - name: Restore dependencies
-        run: dotnet restore src/WebAPI/WebAPI.csproj
+      - name: Build with dotnet
+        run: dotnet build --configuration Release
 
-      # Build do projeto
-      - name: Build the project
-        run: dotnet build --configuration Release src/WebAPI/WebAPI.csproj
+      - name: dotnet publish
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
-      # Publicação do projeto
-      - name: Publish the project
-        run: dotnet publish --configuration Release --output ./publish src/WebAPI/WebAPI.csproj
-
-      # Logar no Azure para o deploy
-      - name: Login to Azure
-        uses: azure/login@v2
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/myapp
 
-      # Deploy para o Azure Web App
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: .net-app
+
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
         with:
-          app-name: 'bizflow-api'
+          app-name: 'bizflow-zupirolli'
           slot-name: 'production'
-          package: ./publish
+          package: .
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_3d9696f20f6f42e1b4e71cc3761582df }}
