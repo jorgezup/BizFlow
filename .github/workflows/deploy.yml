@@ -3,7 +3,7 @@ name: Build and deploy .NET 8 Docker Application to Azure Web App - bizflow-api
 on:
   push:
     branches:
-      - main
+      - master
   workflow_dispatch:
 
 jobs:
