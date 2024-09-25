@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+        <ErrorReport>false</ErrorReport>
     </PropertyGroup>
 
     <ItemGroup>
