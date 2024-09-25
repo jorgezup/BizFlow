@@ -2,10 +2,8 @@ using System.Text.Json;
 using Application;
 using Application.UseCases.Order.Update;
 using Asp.Versioning;
-using Core.Interfaces;
 using Infrastructure;
 using Infrastructure.Data;
-using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
@@ -61,7 +59,8 @@ public abstract class Program
                             options.AddPolicy(name: MyAllowSpecificOrigins,
                                 policy  =>
                                 {
-                                    policy.WithOrigins("http://localhost:3000")
+                                    // policy.WithOrigins("http://localhost:3000")
+                                    policy.AllowAnyOrigin()
                                         .AllowAnyHeader()
                                         .AllowAnyMethod();
                                 });
