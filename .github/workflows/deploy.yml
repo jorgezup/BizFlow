@@ -35,11 +35,11 @@ jobs:
       - name: Publish
         run: dotnet publish ${{env.AZURE_WEBAPP_PROJECT_PATH}}/WebAPI.csproj --configuration Release  --no-build --output ${{env.AZURE_WEBAPP_PACKAGE_PATH}}
 
-#      - name: Upload artifact for deployment job
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: .net-app
-#          path: src/WebAPI/WebAPI.csproj
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: .net-app
+          path: src/WebAPI/WebAPI.csproj
 
   deploy:
     runs-on: ubuntu-latest
@@ -49,10 +49,10 @@ jobs:
 #      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     
     steps:
-#      - name: Download artifact from build job
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: .net-app
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: .net-app
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
