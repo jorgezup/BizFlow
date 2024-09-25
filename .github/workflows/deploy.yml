@@ -8,6 +8,11 @@ on:
     branches:
       - master
   workflow_dispatch:
+    
+env:
+  AZURE_WEBAPP_NAME: 'bizflow-zupirolli'
+  AZURE_WEBAPP_PACKAGE_PATH: './publish'
+  AZURE_WEBAPP_PROJECT_PATH: './src/WebAPI'
 
 jobs:
   build:
@@ -20,37 +25,40 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
+          
+      - name: Restore   
+        run: dotnet restore ${{env.AZURE_WEBAPP_PROJECT_PATH}}/WebAPI.csproj
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release src/WebAPI/WebAPI.csproj
+      - name: Build
+        run: dotnet build ${{env.AZURE_WEBAPP_PROJECT_PATH}}/WebAPI.csproj --configuration Release --no-restore
 
-      - name: dotnet publish
-        run: dotnet publish --configuration Release --output ./publish src/WebAPI/WebAPI.csproj
+      - name: Publish
+        run: dotnet publish ${{env.AZURE_WEBAPP_PROJECT_PATH}}/WebAPI.csproj --configuration Release  --no-build --output ${{env.AZURE_WEBAPP_PACKAGE_PATH}}
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: .net-app
-          path: src/WebAPI/WebAPI.csproj
+#      - name: Upload artifact for deployment job
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: .net-app
+#          path: src/WebAPI/WebAPI.csproj
 
   deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: build
     environment:
       name: 'production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: .net-app
+#      - name: Download artifact from build job
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: .net-app
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'bizflow-zupirolli'
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
           slot-name: 'production'
           package: .
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_3d9696f20f6f42e1b4e71cc3761582df }}
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
