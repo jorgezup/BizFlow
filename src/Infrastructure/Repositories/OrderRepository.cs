@@ -26,6 +26,8 @@ public class OrderRepository(AppDbContext appDbContext) : IOrderRepository
                 order.OrderDetails.Sum(od => od.Subtotal),
                 order.OrderDetails.Select(od => od.Product.Name).ToList(),
                 order.OrderDetails.Select(od => od.Quantity).ToList(),
+                order.OrderDetails.Select(od => od.UnitPrice).ToList(),
+                order.OrderDetails.Select(od => od.Subtotal).ToList(),
                 order.Generated,
                 order.OrderLifeCycle.OrderByDescending(olc => olc.CreatedAt).FirstOrDefault().Status,
                 order.Payment.PaymentMethod.ToString(),
@@ -34,7 +36,7 @@ public class OrderRepository(AppDbContext appDbContext) : IOrderRepository
             ))
             .FirstOrDefaultAsync();
     }
-    
+
     public async Task<IEnumerable<OrderResponse>> GetAllOrdersWithFiltersAsync(
         int page,
         int pageSize,
@@ -88,6 +90,8 @@ public class OrderRepository(AppDbContext appDbContext) : IOrderRepository
                 order.OrderDetails.Sum(od => od.Subtotal),
                 order.OrderDetails.Select(od => od.Product.Name).ToList(),
                 order.OrderDetails.Select(od => od.Quantity).ToList(),
+                order.OrderDetails.Select(od => od.UnitPrice).ToList(),
+                order.OrderDetails.Select(od => od.Subtotal).ToList(),
                 order.Generated,
                 order.OrderLifeCycle.OrderByDescending(olc => olc.CreatedAt).FirstOrDefault().Status,
                 order.Payment.PaymentMethod.ToString(),
@@ -98,7 +102,6 @@ public class OrderRepository(AppDbContext appDbContext) : IOrderRepository
 
         return result;
     }
-
 
 
     public async Task<int> GetTotalOrdersWithFiltersCountAsync(
@@ -139,7 +142,6 @@ public class OrderRepository(AppDbContext appDbContext) : IOrderRepository
     }
 
 
-
     public async Task<IEnumerable<Order>> GetOrdersByCustomerIdAsync(Guid customerId)
     {
         return await appDbContext.Orders
@@ -167,7 +169,7 @@ public class OrderRepository(AppDbContext appDbContext) : IOrderRepository
             appDbContext.Orders.Remove(order);
         }
     }
-    
+
     private static IQueryable<Order> ApplySorting(IQueryable<Order> query, string? sortColumn, string? sortDirection)
     {
         if (!string.IsNullOrEmpty(sortColumn))
@@ -190,5 +192,4 @@ public class OrderRepository(AppDbContext appDbContext) : IOrderRepository
 
         return query;
     }
-
 }

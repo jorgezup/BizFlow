@@ -134,22 +134,22 @@ public class GenerateInvoiceUseCase(IUnitOfWork unitOfWork) : IGenerateInvoiceUs
 
                             table.Header(header =>
                             {
-                                header.Cell().Text(ResourceManagerService.GetString("Product", culture)).FontSize(10);
-                                header.Cell().Text(ResourceManagerService.GetString("Quantity", culture)).FontSize(10);
+                                header.Cell().AlignLeft().Text(ResourceManagerService.GetString("Product", culture)).FontSize(10);
+                                header.Cell().AlignRight().Text(ResourceManagerService.GetString("Quantity", culture)).FontSize(10);
                                 header.Cell().AlignRight().Text(ResourceManagerService.GetString("UnitPrice", culture)).FontSize(10);
                                 header.Cell().AlignRight().Text(ResourceManagerService.GetString("Subtotal", culture)).FontSize(10);
                                 header.Cell().AlignRight().Text(ResourceManagerService.GetString("Payment", culture)).FontSize(10);
                             });
 
-                            for (int i = 0; i < order.Products.Count; i++)
+                            for (var i = 0; i < order.Products.Count; i++)
                             {
                                 var product = products.FirstOrDefault(p => p.Name == order.Products[i]);
 
-                                table.Cell().Text(order.Products[i]).FontSize(10);
-                                table.Cell().AlignCenter().Text($"{order.Quantity[i]}").FontSize(10);
-                                table.Cell().AlignRight().Text($"{product?.Price:C}").FontSize(10);
-                                table.Cell().AlignRight().Text($"{(product?.Price * order.Quantity[i]):C}").FontSize(10);
-                                table.Cell().Text(order.PaymentMethod).FontSize(10);
+                                table.Cell().AlignLeft().Text(order.Products[i]).FontSize(10);
+                                table.Cell().AlignRight().Text($"{order.Quantity[i]:F3}").FontSize(10);
+                                table.Cell().AlignRight().Text($"{order.UnitPrice[i]:C}").FontSize(10);
+                                table.Cell().AlignRight().Text($"{order.Subtotal[i]:C}").FontSize(10);
+                                table.Cell().AlignRight().Text(order.PaymentMethod).FontSize(10);
                             }
                         });
                         column.Item().PaddingTop(2);

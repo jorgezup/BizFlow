@@ -10,6 +10,8 @@ public record OrderResponse(
     decimal TotalAmount,
     List<string> Products,
     List<decimal> Quantity,
+    List<decimal> UnitPrice,
+    List<decimal> Subtotal,
     bool Generated,
     Status Status,
     string PaymentMethod,

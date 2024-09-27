@@ -1,5 +1,6 @@
 using Application.DTOs.Order;
 using Application.UseCases.Order.Create;
+using Application.UseCases.Order.Delete;
 using Application.UseCases.Order.GenerateOrders;
 using Application.UseCases.Order.GetAll;
 using Application.UseCases.Order.GetById;
@@ -19,7 +20,8 @@ public class OrderController(
     UpdateOrderStatusUseCase updateOrderStatusUseCase,
     CreateOrderUseCase createOrderUseCase,
     GenerateOrdersUseCase generateOrdersUseCase,
-    GetAllOrdersUseCase getAllOrdersUseCase
+    GetAllOrdersUseCase getAllOrdersUseCase,
+    DeleteOrderUseCase deleteOrderUseCase
 ) : ControllerBase
 {
     [HttpGet("{id:guid}")]
@@ -42,8 +44,8 @@ public class OrderController(
             return StatusCode(StatusCodes.Status500InternalServerError, new { message = e.Message });
         }
     }
-    
-    [HttpPut]
+
+    [HttpPut("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -99,7 +101,7 @@ public class OrderController(
     }
 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -136,6 +138,22 @@ public class OrderController(
         {
             await generateOrdersUseCase.ExecuteAsync();
             return Ok();
+        }
+        catch (Exception e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = e.Message });
+        }
+    }
+
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeleteOrder(Guid id)
+    {
+        try
+        {
+            await deleteOrderUseCase.ExecuteAsync(id);
+            return NoContent();
         }
         catch (Exception e)
         {

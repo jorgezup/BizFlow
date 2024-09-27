@@ -1,6 +1,7 @@
 using Application.DTOs.Order;
 using Application.Service.Order;
 using Application.UseCases.Order.Create;
+using Application.UseCases.Order.Delete;
 using Application.UseCases.Order.GenerateOrders;
 using Application.UseCases.Order.GetAll;
 using Application.UseCases.Order.GetById;
@@ -21,6 +22,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<GetAllOrdersUseCase>();
         services.AddScoped<UpdateOrderStatusUseCase>();
         services.AddScoped<GenerateOrdersUseCase>();
+        services.AddScoped<DeleteOrderUseCase>();
 
         // Add Validators
         services.AddScoped<IValidator<OrderRequest>, OrderValidator>();

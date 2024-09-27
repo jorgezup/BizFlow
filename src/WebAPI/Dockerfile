@@ -13,7 +13,7 @@ COPY ["src/Core/Core.csproj", "src/Core/"]
 COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
 RUN dotnet restore "src/WebAPI/WebAPI.csproj"
 COPY . .
-WORKDIR "/src/src/WebAPI"
+WORKDIR "src/WebAPI/"
 RUN dotnet build "WebAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
