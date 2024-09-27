@@ -1,6 +1,6 @@
-using Application.DTOs.CustomerPreferences;
 using Core.Exceptions;
 using Core.Interfaces;
+using CustomerPreferencesResponse = Core.DTOs.CustomerPreferencesResponse;
 
 namespace Application.UseCases.CustomerPreferences.GetById;
 
@@ -15,7 +15,7 @@ public class GetCustomerPreferencesByIdUseCase(IUnitOfWork unitOfWork) : IGetCus
             if (customerPreference is null)
                 throw new NotFoundException("Customer preferences not found");
 
-            return customerPreference.MapToCustomerPreferencesResponse();
+            return customerPreference;
         }
         catch (Exception e) when (e is not NotFoundException)
         {

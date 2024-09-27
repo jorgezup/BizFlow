@@ -75,4 +75,7 @@
     <data name="InvoicesBadRequest" xml:space="preserve">
         <value>The range of dates cannot be more than 60 days or Start date cannot be greater than end date.</value>
     </data>
+    <data name="Order" xml:space="preserve">
+        <value>Order</value>
+    </data>
 </root>

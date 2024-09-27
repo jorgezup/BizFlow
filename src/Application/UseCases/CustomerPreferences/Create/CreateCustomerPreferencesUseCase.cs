@@ -2,6 +2,7 @@ using Application.DTOs.CustomerPreferences;
 using Core.Exceptions;
 using Core.Interfaces;
 using FluentValidation;
+using CustomerPreferencesResponse = Core.DTOs.CustomerPreferencesResponse;
 
 namespace Application.UseCases.CustomerPreferences.Create;
 

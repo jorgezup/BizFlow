@@ -4,7 +4,6 @@ using Application.UseCases.CustomerPreferences.Delete;
 using Application.UseCases.CustomerPreferences.GetAll;
 using Application.UseCases.CustomerPreferences.GetByCustomerId;
 using Application.UseCases.CustomerPreferences.GetById;
-using Application.UseCases.CustomerPreferences.Update;
 using Application.UseCases.CustomerPreferences.Validator;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +21,6 @@ public static class ServiceCollectionExtensions
         // Add UseCases
         services.AddScoped<GetAllCustomerPreferencesUseCase>();
         services.AddScoped<GetCustomerPreferencesByIdUseCase>();
-        services.AddScoped<UpdateCustomerPreferencesUseCase>();
         services.AddScoped<CreateCustomerPreferencesUseCase>();
         services.AddScoped<DeleteCustomerPreferencesUseCase>();
         services.AddScoped<GetCustomerPreferencesByCustomerIdUseCase>();

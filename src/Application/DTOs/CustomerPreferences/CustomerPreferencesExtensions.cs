@@ -2,10 +2,10 @@ namespace Application.DTOs.CustomerPreferences;
 
 public static class CustomerPreferencesExtensions
 {
-    public static CustomerPreferencesResponse MapToCustomerPreferencesResponse(
+    public static Core.DTOs.CustomerPreferencesResponse MapToCustomerPreferencesResponse(
         this Core.Entities.CustomerPreferences customerPreferences)
     {
-        return new CustomerPreferencesResponse(
+        return new Core.DTOs.CustomerPreferencesResponse(
             customerPreferences.Id,
             customerPreferences.CustomerId,
             customerPreferences.Customer.Name,

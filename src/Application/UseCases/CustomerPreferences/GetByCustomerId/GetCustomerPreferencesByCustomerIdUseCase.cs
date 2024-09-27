@@ -1,6 +1,6 @@
-using Application.DTOs.CustomerPreferences;
 using Core.Exceptions;
 using Core.Interfaces;
+using CustomerPreferencesResponse = Core.DTOs.CustomerPreferencesResponse;
 
 namespace Application.UseCases.CustomerPreferences.GetByCustomerId;
 
@@ -13,18 +13,13 @@ public class GetCustomerPreferencesByCustomerIdUseCase(IUnitOfWork unitOfWork)
         {
             var customerPreferencesByCustomerId =
                 await unitOfWork.CustomerPreferencesRepository.GetByCustomerIdAsync(customerId);
-
-            var customerPreferencesByCustomerIdList = customerPreferencesByCustomerId.ToList();
-            if (customerPreferencesByCustomerIdList.Count is 0)
-                throw new NotFoundException("Customer preferences not found");
             
-            foreach (var customerPreference in customerPreferencesByCustomerIdList)
-            {
-                customerPreference.Customer = await unitOfWork.CustomerRepository.GetByIdAsync(customerPreference.CustomerId);
-                customerPreference.Product = await unitOfWork.ProductRepository.GetByIdAsync(customerPreference.ProductId);
-            }
+            var customerPreferencesByCustomerIdList = customerPreferencesByCustomerId.ToList();
+            
+            if (customerPreferencesByCustomerId is null || customerPreferencesByCustomerId.Count() is 0)
+                return [];
 
-            return customerPreferencesByCustomerIdList.Select(x => x.MapToCustomerPreferencesResponse());
+            return customerPreferencesByCustomerIdList;
         }
         catch (Exception e) when (e is not NotFoundException)
         {

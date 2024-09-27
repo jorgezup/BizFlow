@@ -1,5 +1,5 @@
-using Application.DTOs.CustomerPreferences;
 using Core.Interfaces;
+using CustomerPreferencesResponse = Core.DTOs.CustomerPreferencesResponse;
 
 namespace Application.UseCases.CustomerPreferences.GetAll;
 
@@ -11,7 +11,7 @@ public class GetAllCustomerPreferencesUseCase(IUnitOfWork unitOfWork) : IGetAllC
         {
             var customerPreferences = await unitOfWork.CustomerPreferencesRepository.GetAllAsync();
 
-            return customerPreferences.Select(x => x.MapToCustomerPreferencesResponse());
+            return customerPreferences;
         }
         catch (Exception e)
         {

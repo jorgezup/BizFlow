@@ -1,13 +1,14 @@
+using Core.DTOs;
 using Core.Entities;
 
 namespace Core.Interfaces;
 
 public interface ICustomerPreferencesRepository
 {
-    Task<CustomerPreferences?> GetByIdAsync(Guid id);
-    Task<IEnumerable<CustomerPreferences>> GetAllAsync();
+    Task<CustomerPreferencesResponse?> GetByIdAsync(Guid id);
+    Task<IEnumerable<CustomerPreferencesResponse>> GetAllAsync();
     Task AddAsync(CustomerPreferences customerPreferences);
     Task UpdateAsync(CustomerPreferences customerPreferences);
     Task DeleteAsync(Guid id);
-    Task<IEnumerable<CustomerPreferences>> GetByCustomerIdAsync(Guid customerId);
+    Task<IEnumerable<CustomerPreferencesResponse>> GetByCustomerIdAsync(Guid customerId);
 }

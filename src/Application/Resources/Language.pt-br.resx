@@ -1,0 +1,74 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="Address" xml:space="preserve">
+        <value>Endereço</value>
+    </data>
+    <data name="CustomerInvoice" xml:space="preserve">
+        <value>Fatura do Cliente</value>
+    </data>
+    <data name="Date" xml:space="preserve">
+        <value>Data</value>
+    </data>
+    <data name="Email" xml:space="preserve">
+        <value>E-mail</value>
+    </data>
+    <data name="InvoicePeriod" xml:space="preserve">
+        <value>Período da Fatura</value>
+    </data>
+    <data name="Name" xml:space="preserve">
+        <value>Nome</value>
+    </data>
+    <data name="Order" xml:space="preserve">
+        <value>Pedido</value>
+    </data>
+    <data name="OrderDate" xml:space="preserve">
+        <value>Data do Pedido</value>
+    </data>
+    <data name="OrderID" xml:space="preserve">
+        <value>Id do Pedido</value>
+    </data>
+    <data name="OrdersSummary" xml:space="preserve">
+        <value>Resumo dos Pedidos</value>
+    </data>
+    <data name="Product" xml:space="preserve">
+        <value>Produto</value>
+    </data>
+    <data name="Quantity" xml:space="preserve">
+        <value>Quantidade</value>
+    </data>
+    <data name="Subtotal" xml:space="preserve">
+        <value>Subtotal</value>
+    </data>
+    <data name="ThankYou" xml:space="preserve">
+        <value>Obrigado por sua compra!</value>
+    </data>
+    <data name="TotalOrders" xml:space="preserve">
+        <value>Total de Pedidos</value>
+    </data>
+    <data name="UnitPrice" xml:space="preserve">
+        <value>Preço unitário</value>
+    </data>
+    <data name="TotalOrderValue" xml:space="preserve">
+        <value>Valor total do pedido</value>
+    </data>
+    <data name="TotalAmount" xml:space="preserve">
+        <value>Valor total</value>
+    </data>
+    <data name="NoOrdersInvoice" xml:space="preserve">
+        <value>Nenhum pedido encontrado para o cliente e período informado.</value>
+    </data>
+    <data name="InvoicesBadRequest" xml:space="preserve">
+        <value>O período das datas não pode ser maior que 60 dias. Ou a data de início não pode ser maior que a data de fim.</value>
+    </data>
+</root>

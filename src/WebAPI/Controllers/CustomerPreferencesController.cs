@@ -4,10 +4,10 @@ using Application.UseCases.CustomerPreferences.Delete;
 using Application.UseCases.CustomerPreferences.GetAll;
 using Application.UseCases.CustomerPreferences.GetByCustomerId;
 using Application.UseCases.CustomerPreferences.GetById;
-using Application.UseCases.CustomerPreferences.Update;
 using Asp.Versioning;
 using Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using CustomerPreferencesResponse = Core.DTOs.CustomerPreferencesResponse;
 
 namespace WebAPI.Controllers;
 
@@ -17,7 +17,6 @@ namespace WebAPI.Controllers;
 public class CustomerPreferencesController(
     CreateCustomerPreferencesUseCase createCustomerPreferencesUseCase,
     GetCustomerPreferencesByIdUseCase getCustomerPreferencesByIdUseCase,
-    UpdateCustomerPreferencesUseCase updateCustomerPreferencesUseCase,
     DeleteCustomerPreferencesUseCase deleteCustomerPreferencesUseCase,
     GetAllCustomerPreferencesUseCase getAllCustomerPreferencesUseCase,
     GetCustomerPreferencesByCustomerIdUseCase getCustomerPreferencesByICustomerIdUseCase)
@@ -74,27 +73,6 @@ public class CustomerPreferencesController(
         try
         {
             var response = await getCustomerPreferencesByIdUseCase.ExecuteAsync(id);
-            return Ok(response);
-        }
-        catch (NotFoundException)
-        {
-            return NotFound();
-        }
-        catch (Exception e)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = e.Message });
-        }
-    }
-
-    [HttpPut]
-    [ProducesResponseType(typeof(CustomerPreferencesResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateCustomerPreferences(Guid id, UpdateCustomerPreferencesRequest request)
-    {
-        try
-        {
-            var response = await updateCustomerPreferencesUseCase.ExecuteAsync(id, request);
             return Ok(response);
         }
         catch (NotFoundException)
