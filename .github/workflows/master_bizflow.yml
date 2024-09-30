@@ -58,4 +58,5 @@ jobs:
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_34CD127175AC47559BA1671085AD6455 }}
           
       - name: Check App is Running
+        timeout-minutes: 2
         run: curl -sSf ${{ steps.deploy-to-webapp.outputs.webapp-url }}/api/v1.0/customers          
