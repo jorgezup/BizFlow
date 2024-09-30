@@ -6,6 +6,7 @@ using QuestPDF;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using QuestPDF.Previewer;
 
 namespace Application.UseCases.Invoices.Generate;
 
@@ -21,7 +22,8 @@ public class GenerateInvoiceUseCase(IUnitOfWork unitOfWork) : IGenerateInvoiceUs
         
         // the range of dates cannot be greater than 60 days
         if (startDate.AddDays(60) < endDate)
-            throw new BadRequestException("The range of dates cannot be more than 60 days or Start date cannot be greater than end date.");
+            throw new BadRequestException(ResourceManagerService.GetString("InvoicesBadRequest", language));
+            // throw new BadRequestException("The range of dates cannot be more than 60 days or Start date cannot be greater than end date.");
         
         if (startDate == DateTime.MinValue)
             startDate = DateTime.Now.AddMonths(-1);
@@ -44,7 +46,8 @@ public class GenerateInvoiceUseCase(IUnitOfWork unitOfWork) : IGenerateInvoiceUs
         var products = await unitOfWork.ProductRepository.GetAllAsync();
 
         if (!orders.Any())
-            throw new NotFoundException("No orders found for the specified customer and date range.");
+            // throw new NotFoundException("No orders found for the specified customer and date range.");
+            throw new NotFoundException(ResourceManagerService.GetString("NoOrdersInvoice", language));
 
         var pdf = GeneratePdf(orders, customer, products, startDate, endDate, language);
 
@@ -143,13 +146,15 @@ public class GenerateInvoiceUseCase(IUnitOfWork unitOfWork) : IGenerateInvoiceUs
 
                             for (var i = 0; i < order.Products.Count; i++)
                             {
-                                var product = products.FirstOrDefault(p => p.Name == order.Products[i]);
-
+                                var paymentMethod = GetPaymentMethod(order.PaymentMethod, culture);
+                                // var paymentMethod = "aaa";
+                                Console.WriteLine(paymentMethod);
                                 table.Cell().AlignLeft().Text(order.Products[i]).FontSize(10);
                                 table.Cell().AlignRight().Text($"{order.Quantity[i]:F3}").FontSize(10);
                                 table.Cell().AlignRight().Text($"{order.UnitPrice[i]:C}").FontSize(10);
                                 table.Cell().AlignRight().Text($"{order.Subtotal[i]:C}").FontSize(10);
-                                table.Cell().AlignRight().Text(order.PaymentMethod).FontSize(10);
+                                // table.Cell().AlignRight().Text(paymentMethod).FontSize(10);
+                                table.Cell().AlignRight().Text(paymentMethod).FontSize(10);
                             }
                         });
                         column.Item().PaddingTop(2);
@@ -160,7 +165,20 @@ public class GenerateInvoiceUseCase(IUnitOfWork unitOfWork) : IGenerateInvoiceUs
             });
         });
         
-        // document.ShowInPreviewer();
+        document.ShowInPreviewer();
         return document.GeneratePdf();
+    }
+    
+    private static string GetPaymentMethod(string paymentMethod, string culture)
+    {
+        return paymentMethod switch
+        {
+            "Cash" => ResourceManagerService.GetString(paymentMethod, culture),
+            "Pix" => ResourceManagerService.GetString(paymentMethod, culture),
+            "Courtesy" => ResourceManagerService.GetString(paymentMethod, culture),
+            "" => ResourceManagerService.GetString("NoPayment", culture),
+            null => ResourceManagerService.GetString("NoPayment", culture),
+            _ => paymentMethod
+        };
     }
 }

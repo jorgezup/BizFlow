@@ -60,7 +60,7 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Address.
+        ///   Looks up a localized string similar to Endereço.
         /// </summary>
         internal static string Address {
             get {
@@ -69,7 +69,25 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Customer Invoice.
+        ///   Looks up a localized string similar to dinheiro.
+        /// </summary>
+        internal static string Cash {
+            get {
+                return ResourceManager.GetString("Cash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to cortesia.
+        /// </summary>
+        internal static string Courtesy {
+            get {
+                return ResourceManager.GetString("Courtesy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fatura do Cliente.
         /// </summary>
         internal static string CustomerInvoice {
             get {
@@ -78,7 +96,7 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Date.
+        ///   Looks up a localized string similar to Data.
         /// </summary>
         internal static string Date {
             get {
@@ -87,7 +105,7 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Email.
+        ///   Looks up a localized string similar to E-mail.
         /// </summary>
         internal static string Email {
             get {
@@ -96,7 +114,7 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invoice Period.
+        ///   Looks up a localized string similar to Período da Fatura.
         /// </summary>
         internal static string InvoicePeriod {
             get {
@@ -105,7 +123,7 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The range of dates cannot be more than 60 days or Start date cannot be greater than end date..
+        ///   Looks up a localized string similar to O período das datas não pode ser maior que 60 dias e/ou a data de início não pode ser maior que a data final..
         /// </summary>
         internal static string InvoicesBadRequest {
             get {
@@ -114,7 +132,7 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Name.
+        ///   Looks up a localized string similar to Nome.
         /// </summary>
         internal static string Name {
             get {
@@ -123,7 +141,7 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No orders found for the specified customer and date range..
+        ///   Looks up a localized string similar to Nenhum pedido encontrado para o cliente na data informada..
         /// </summary>
         internal static string NoOrdersInvoice {
             get {
@@ -132,7 +150,16 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Order.
+        ///   Looks up a localized string similar to Não registrado.
+        /// </summary>
+        internal static string NoPayment {
+            get {
+                return ResourceManager.GetString("NoPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pedido.
         /// </summary>
         internal static string Order {
             get {
@@ -141,7 +168,7 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to OrderDate.
+        ///   Looks up a localized string similar to Data do Pedido.
         /// </summary>
         internal static string OrderDate {
             get {
@@ -150,7 +177,7 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to OrderId.
+        ///   Looks up a localized string similar to Id do Pedido.
         /// </summary>
         internal static string OrderID {
             get {
@@ -159,7 +186,7 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Orders Summary.
+        ///   Looks up a localized string similar to Resumo dos pedidos.
         /// </summary>
         internal static string OrdersSummary {
             get {
@@ -168,7 +195,25 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Product.
+        ///   Looks up a localized string similar to Pagamento.
+        /// </summary>
+        internal static string Payment {
+            get {
+                return ResourceManager.GetString("Payment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to pix.
+        /// </summary>
+        internal static string Pix {
+            get {
+                return ResourceManager.GetString("Pix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Produto.
         /// </summary>
         internal static string Product {
             get {
@@ -177,7 +222,7 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Quantity.
+        ///   Looks up a localized string similar to Quantidade.
         /// </summary>
         internal static string Quantity {
             get {
@@ -195,7 +240,7 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Thank you for your business!.
+        ///   Looks up a localized string similar to Obrigado pela confiança!.
         /// </summary>
         internal static string ThankYou {
             get {
@@ -204,7 +249,7 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Total Amount.
+        ///   Looks up a localized string similar to Valor total.
         /// </summary>
         internal static string TotalAmount {
             get {
@@ -213,7 +258,7 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Total Orders.
+        ///   Looks up a localized string similar to Total de pedidos.
         /// </summary>
         internal static string TotalOrders {
             get {
@@ -222,7 +267,7 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Total Order Value.
+        ///   Looks up a localized string similar to Valor total do pedido.
         /// </summary>
         internal static string TotalOrderValue {
             get {
@@ -231,7 +276,7 @@ namespace Application.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UnitPrice.
+        ///   Looks up a localized string similar to Preço unitário.
         /// </summary>
         internal static string UnitPrice {
             get {

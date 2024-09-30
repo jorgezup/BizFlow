@@ -23,13 +23,14 @@ public class InvoiceController(GenerateInvoiceUseCase generateInvoiceUseCase) : 
         }
         catch (NotFoundException ex)
         {
-            // return NotFound(new { message = ex.Message });
+            return NotFound(new { message = ex.Message });
             
-            return NotFound(new { message = ResourceManagerService.GetString("NoOrdersInvoice", "pt-br") });
+            // return NotFound(new { message = ResourceManagerService.GetString("NoOrdersInvoice", "pt-br") });
         }
         catch (BadRequestException ex)
         {
-            return BadRequest(new { message = ResourceManagerService.GetString("InvoicesBadRequest", "pt-br") });
+            return BadRequest(new { message = ex.Message });
+            // return BadRequest(new { message = ResourceManagerService.GetString("InvoicesBadRequest", "pt-br") });
         }
         catch (Exception ex)
         {

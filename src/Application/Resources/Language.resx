@@ -19,63 +19,78 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="CustomerInvoice" xml:space="preserve">
-        <value>Customer Invoice</value>
+        <value>Fatura do Cliente</value>
     </data>
     <data name="ThankYou" xml:space="preserve">
-        <value>Thank you for your business!</value>
+        <value>Obrigado pela confiança!</value>
     </data>
     <data name="Name" xml:space="preserve">
-        <value>Name</value>
+        <value>Nome</value>
     </data>
     <data name="Email" xml:space="preserve">
-        <value>Email</value>
+        <value>E-mail</value>
     </data>
     <data name="Address" xml:space="preserve">
-        <value>Address</value>
+        <value>Endereço</value>
     </data>
     <data name="Date" xml:space="preserve">
-        <value>Date</value>
+        <value>Data</value>
     </data>
     <data name="InvoicePeriod" xml:space="preserve">
-        <value>Invoice Period</value>
+        <value>Período da Fatura</value>
     </data>
     <data name="TotalOrders" xml:space="preserve">
-        <value>Total Orders</value>
+        <value>Total de pedidos</value>
     </data>
     <data name="TotalAmount" xml:space="preserve">
-        <value>Total Amount</value>
+        <value>Valor total</value>
     </data>
     <data name="OrdersSummary" xml:space="preserve">
-        <value>Orders Summary</value>
+        <value>Resumo dos pedidos</value>
     </data>
     <data name="Product" xml:space="preserve">
-        <value>Product</value>
+        <value>Produto</value>
     </data>
     <data name="Subtotal" xml:space="preserve">
         <value>Subtotal</value>
     </data>
     <data name="OrderID" xml:space="preserve">
-        <value>OrderId</value>
+        <value>Id do Pedido</value>
     </data>
     <data name="TotalOrderValue" xml:space="preserve">
-        <value>Total Order Value</value>
+        <value>Valor total do pedido</value>
     </data>
     <data name="Quantity" xml:space="preserve">
-        <value>Quantity</value>
+        <value>Quantidade</value>
     </data>
     <data name="UnitPrice" xml:space="preserve">
-        <value>UnitPrice</value>
+        <value>Preço unitário</value>
     </data>
     <data name="OrderDate" xml:space="preserve">
-        <value>OrderDate</value>
+        <value>Data do Pedido</value>
     </data>
     <data name="NoOrdersInvoice" xml:space="preserve">
-        <value>No orders found for the specified customer and date range.</value>
+        <value>Nenhum pedido encontrado para o cliente na data informada.</value>
     </data>
     <data name="InvoicesBadRequest" xml:space="preserve">
-        <value>The range of dates cannot be more than 60 days or Start date cannot be greater than end date.</value>
+        <value>O período das datas não pode ser maior que 60 dias e/ou a data de início não pode ser maior que a data final.</value>
     </data>
     <data name="Order" xml:space="preserve">
-        <value>Order</value>
+        <value>Pedido</value>
+    </data>
+    <data name="Payment" xml:space="preserve">
+        <value>Pagamento</value>
+    </data>
+    <data name="Courtesy" xml:space="preserve">
+        <value>cortesia</value>
+    </data>
+    <data name="Pix" xml:space="preserve">
+        <value>pix</value>
+    </data>
+    <data name="Cash" xml:space="preserve">
+        <value>dinheiro</value>
+    </data>
+    <data name="NoPayment" xml:space="preserve">
+        <value>Não registrado</value>
     </data>
 </root>
