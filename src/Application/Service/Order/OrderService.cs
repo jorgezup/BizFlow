@@ -54,7 +54,7 @@ public class OrderService(IUnitOfWork unitOfWork, IMediator mediator) : IOrderSe
 
             order.OrderDetails.Add(orderDetail);
 
-            await mediator.Publish(new OrderEvent(order.Id, Status.Pending));
+            await mediator.Publish(new OrderEvent(order.Id, Status.Completed));
 
             await unitOfWork.OrderDetailRepository.AddAsync(orderDetail);
         }
