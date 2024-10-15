@@ -5,7 +5,7 @@ namespace Application.DTOs.Payment;
 
 public class PendingPaymentResponse
 {
-    public IEnumerable<OrderResponse> Orders { get; set; }
-    public IEnumerable<CustomerPendingPayment> CustomerPendingPayment { get; set; }
+    public List<OrderResponse> Orders { get; set; }
+    public List<CustomerPendingPayment> CustomerPendingPayment { get; set; }
     public decimal TotalPendingAmount { get; set; }
 }

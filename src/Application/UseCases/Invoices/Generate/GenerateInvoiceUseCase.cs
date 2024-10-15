@@ -31,7 +31,7 @@ public class GenerateInvoiceUseCase(IUnitOfWork unitOfWork) : IGenerateInvoiceUs
         if (endDate == DateTime.MinValue)
             endDate = DateTime.Now;
 
-        var orders = await unitOfWork.OrderRepository.GetAllOrdersWithFiltersAsync(
+        var orders = await unitOfWork.OrderRepository.GetAllPaginatedOrdersAsync(
             1,
             int.MaxValue,
             customerId,
@@ -165,7 +165,7 @@ public class GenerateInvoiceUseCase(IUnitOfWork unitOfWork) : IGenerateInvoiceUs
             });
         });
         
-        document.ShowInPreviewer();
+        // document.ShowInPreviewer();
         return document.GeneratePdf();
     }
     

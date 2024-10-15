@@ -4,7 +4,7 @@ using OrderResponse = Core.DTOs.OrderResponse;
 
 namespace Application.UseCases.Order.GetAll;
 
-public class GetAllOrdersUseCase(IUnitOfWork unitOfWork) : IGetAllOrdersUseCase
+public class GetAllPaginatedOrdersUseCase(IUnitOfWork unitOfWork) : IGetAllPaginatedOrdersUseCase
 {
     public async Task<PaginatedResponse<OrderResponse>> ExecuteAsync(
         int page, 
@@ -18,7 +18,7 @@ public class GetAllOrdersUseCase(IUnitOfWork unitOfWork) : IGetAllOrdersUseCase
     {
         try 
         {
-            var orders = await unitOfWork.OrderRepository.GetAllOrdersWithFiltersAsync(
+            var orders = await unitOfWork.OrderRepository.GetAllPaginatedOrdersAsync(
                 page, 
                 pageSize, 
                 customerId, 
@@ -29,7 +29,7 @@ public class GetAllOrdersUseCase(IUnitOfWork unitOfWork) : IGetAllOrdersUseCase
                 sortDirection
             );
             
-            var totalRecords = await unitOfWork.OrderRepository.GetTotalOrdersWithFiltersCountAsync(customerId, status, startDate, endDate);
+            var totalRecords = await unitOfWork.OrderRepository.GetTotalPaginatedOrdersAsync(customerId, status, startDate, endDate);
 
             return new PaginatedResponse<OrderResponse>
             {

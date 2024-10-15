@@ -3,7 +3,7 @@ using OrderResponse = Core.DTOs.OrderResponse;
 
 namespace Application.UseCases.Order.GetAll;
 
-public interface IGetAllOrdersUseCase
+public interface IGetAllPaginatedOrdersUseCase
 {
     public Task<PaginatedResponse<OrderResponse>> ExecuteAsync(int page,
         int pageSize,

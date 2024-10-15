@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-
+          
       - name: Set up dependency caching for faster builds
         uses: actions/cache@v3
         with:
@@ -64,5 +64,17 @@ jobs:
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
           
       - name: Check App is Running
-        timeout-minutes: 2
-        run: curl -sSf ${{ steps.deploy-to-webapp.outputs.webapp-url }}/api/v1.0/customers
+        id: health-check
+        run: |
+          for i in {1..10}; do
+            status=$(curl -s -o /dev/null -w "%{http_code}" ${{ steps.deploy-to-webapp.outputs.webapp-url }}/health)
+            if [ "$status" -eq 200 ]; then
+              echo "Application is up and running."
+              exit 0
+            else
+              echo "Waiting for application to be ready..."
+              sleep 10
+            fi
+          done
+          echo "Application did not start in expected time."
+          exit 1

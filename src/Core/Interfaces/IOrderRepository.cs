@@ -8,7 +8,15 @@ public interface IOrderRepository
     Task AddAsync(Order order);
     Task<OrderResponse> GetByIdAsync(Guid id);
 
-    Task<IEnumerable<OrderResponse>> GetAllOrdersWithFiltersAsync(
+    Task<IEnumerable<OrderResponse>> GetAllOrdersAsync(
+        Guid? customerId,
+        string status,
+        DateTime? startDate,
+        DateTime? endDate,
+        string? sortColumn,
+        string? sortDirection);
+
+    Task<IEnumerable<OrderResponse>> GetAllPaginatedOrdersAsync(
         int page,
         int pageSize,
         Guid? customerId,
@@ -18,7 +26,7 @@ public interface IOrderRepository
         string? sortColumn,
         string? sortDirection);
 
-    Task<int> GetTotalOrdersWithFiltersCountAsync(
+    Task<int> GetTotalPaginatedOrdersAsync(
         Guid? customerId,
         string? status,
         DateTime? startDate,

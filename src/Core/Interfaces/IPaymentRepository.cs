@@ -7,7 +7,13 @@ public interface IPaymentRepository
 {
     Task<PaymentResponse> GetPaymentByIdAsync(Guid paymentId);
     Task<bool> ExistsPaymentByOrderIdAsync(Guid orderId);
-    Task<IEnumerable<PaymentResponse>> GetAllPaymentsWithFiltersAsync(
+    Task<IEnumerable<PaymentResponse>> GetAllPaymentsAsync(
+        Guid? customerId,
+        DateTime? startDate,
+        DateTime? endDate,
+        string? sortColumn,
+        string? sortDirection);
+    Task<IEnumerable<PaymentResponse>> GetAllPaginatedPaymentsAsync(
         int page,
         int pageSize,
         Guid? customerId,
@@ -15,7 +21,7 @@ public interface IPaymentRepository
         DateTime? endDate,
         string? sortColumn,
         string? sortDirection);
-    Task<int> GetAllPaymentsWithFiltersCountAsync(
+    Task<int> GetTotalPaginatedPaymentsAsync(
         Guid? customerId,
         DateTime? startDate,
         DateTime? endDate);

@@ -17,7 +17,7 @@ public class GetAllPaymentsUseCase(IUnitOfWork unitOfWork) : IGetAllPaymentsUseC
     {
         try
         {
-            var payments = await unitOfWork.PaymentRepository.GetAllPaymentsWithFiltersAsync(
+            var payments = await unitOfWork.PaymentRepository.GetAllPaginatedPaymentsAsync(
                 page,
                 pageSize,
                 customerId,
@@ -28,7 +28,7 @@ public class GetAllPaymentsUseCase(IUnitOfWork unitOfWork) : IGetAllPaymentsUseC
             );
 
             var totalRecords =
-                await unitOfWork.PaymentRepository.GetAllPaymentsWithFiltersCountAsync(customerId, startDate, endDate);
+                await unitOfWork.PaymentRepository.GetTotalPaginatedPaymentsAsync(customerId, startDate, endDate);
 
             return new PaginatedResponse<PaymentResponse>
             {

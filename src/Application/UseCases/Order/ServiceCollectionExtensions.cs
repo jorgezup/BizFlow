@@ -19,7 +19,7 @@ public static class ServiceCollectionExtensions
         // Add UseCases
         services.AddScoped<CreateOrderUseCase>();
         services.AddScoped<GetOrderByIdUseCase>();
-        services.AddScoped<GetAllOrdersUseCase>();
+        services.AddScoped<GetAllPaginatedOrdersUseCase>();
         services.AddScoped<UpdateOrderStatusUseCase>();
         services.AddScoped<GenerateOrdersUseCase>();
         services.AddScoped<DeleteOrderUseCase>();

@@ -1,20 +1,15 @@
-using Application.DTOs.Paginate;
 using Application.DTOs.Payment;
+using Application.UseCases.Payment.GetPendingPayments;
 using Core.DTOs;
 using Core.Enums;
 using Core.Interfaces;
 
-namespace Application.UseCases.Payment.GetPendingPayments;
-
 public class GetPendingPaymentsUseCase(IUnitOfWork unitOfWork) : IGetPendingPaymentsUseCase
 {
-    public async Task<PaginatedResponse<PendingPaymentResponse>> ExecuteAsync(Guid? customerId, DateTime? startDate,
-        DateTime? endDate, int page, int pageSize)
+    public async Task<PendingPaymentResponse> ExecuteAsync(Guid? customerId, DateTime? startDate, DateTime? endDate)
     {
-        // Get all completed orders - Status: Completed means that is a sale
-        var ordersCompleted = await unitOfWork.OrderRepository.GetAllOrdersWithFiltersAsync(
-            page: page,
-            pageSize: pageSize,
+        // Obter todos os pedidos concluídos com os filtros aplicados
+        var allCompletedOrders = await unitOfWork.OrderRepository.GetAllOrdersAsync(
             customerId: customerId,
             status: Status.Completed.ToString(),
             startDate: startDate,
@@ -23,51 +18,42 @@ public class GetPendingPaymentsUseCase(IUnitOfWork unitOfWork) : IGetPendingPaym
             sortDirection: null
         );
 
-        // Get all payments for the customer
-        var allPayments = await unitOfWork.PaymentRepository.GetAllPaymentsWithFiltersAsync(
-            page: page,
-            pageSize: pageSize,
+        // Obter todos os pagamentos com os filtros aplicados
+        var allPayments = await unitOfWork.PaymentRepository.GetAllPaymentsAsync(
             customerId: customerId,
             startDate: startDate,
             endDate: endDate,
             sortColumn: null,
-            sortDirection: null);
+            sortDirection: null
+        );
 
-        // Filter completed orders that don't have associated payments - means that they have not been paid
-        // var ordersCompletedWithoutPayment = ordersCompleted
-        //     .Where(order => !allPayments
-        //         .Select(p => p.OrderId)
-        //         .Contains(order.Id))
-        //     .ToList();
-        
-        var ordersCompletedWithoutPayment = ordersCompleted
-            .Where(order => string.IsNullOrWhiteSpace(order.PaymentMethod))
-            .ToList();
-        
-        // Paginate
-        var paginatedOrders = ordersCompletedWithoutPayment
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+        // Obter IDs dos pedidos que já possuem pagamento
+        var paidOrderIds = allPayments.Select(p => p.OrderId).ToHashSet();
+
+        // Filtrar pedidos concluídos que não possuem pagamentos associados
+        var ordersWithoutPayment = allCompletedOrders
+            .Where(order => !paidOrderIds.Contains(order.Id))
             .ToList();
 
-        return new PaginatedResponse<PendingPaymentResponse>
-        {
-            Result = new PendingPaymentResponse
+        // Agrupar e somar os valores pendentes por cliente
+        var customerPendingPayments = ordersWithoutPayment
+            .GroupBy(order => new { order.CustomerId, order.CustomerName })
+            .Select(group => new CustomerPendingPayment
             {
-                Orders = paginatedOrders.Select(order => order).ToList(),
-                CustomerPendingPayment = paginatedOrders
-                    .GroupBy(order => order.CustomerId)
-                    .Select(group => new CustomerPendingPayment
-                    (
-                        CustomerId: group.Key,
-                        CustomerName: group.First().CustomerName,
-                        TotalPendingAmount: group.Sum(o => o.TotalAmount)
-                    )).ToList(),
-                TotalPendingAmount = paginatedOrders.Sum(order => order.TotalAmount),
-            },
-            TotalRecords = ordersCompletedWithoutPayment.Count,
-            PageSize = pageSize,
-            CurrentPage = page
+                CustomerId = group.Key.CustomerId,
+                CustomerName = group.Key.CustomerName,
+                TotalPendingAmount = group.Sum(o => o.TotalAmount)
+            })
+            .ToList();
+
+        // Calcular o total pendente geral
+        var totalPendingAmount = ordersWithoutPayment.Sum(order => order.TotalAmount);
+
+        return new PendingPaymentResponse
+        {
+            Orders = ordersWithoutPayment,
+            CustomerPendingPayment = customerPendingPayments,
+            TotalPendingAmount = totalPendingAmount,
         };
     }
 }

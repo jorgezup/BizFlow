@@ -20,7 +20,7 @@ public class OrderController(
     UpdateOrderStatusUseCase updateOrderStatusUseCase,
     CreateOrderUseCase createOrderUseCase,
     GenerateOrdersUseCase generateOrdersUseCase,
-    GetAllOrdersUseCase getAllOrdersUseCase,
+    GetAllPaginatedOrdersUseCase getAllPaginatedOrdersUseCase,
     DeleteOrderUseCase deleteOrderUseCase
 ) : ControllerBase
 {
@@ -83,7 +83,7 @@ public class OrderController(
     {
         try
         {
-            var orders = await getAllOrdersUseCase.ExecuteAsync(
+            var orders = await getAllPaginatedOrdersUseCase.ExecuteAsync(
                 page,
                 pageSize,
                 customerId,

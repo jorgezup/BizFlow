@@ -31,8 +31,64 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
         return appDbContext.Payments
             .AnyAsync(p => p.OrderId == orderId);
     }
+    
+    public async Task<IEnumerable<PaymentResponse>> GetAllPaymentsAsync(
+        Guid? customerId,
+        DateTime? startDate,
+        DateTime? endDate,
+        string? sortColumn,
+        string? sortDirection)
+    {
+        var query = appDbContext.Payments.AsQueryable();
 
-    public async Task<IEnumerable<PaymentResponse>> GetAllPaymentsWithFiltersAsync(
+        // Aplicar filtros
+        if (customerId.HasValue)
+        {
+            query = query.Where(p => p.Order.CustomerId == customerId.Value);
+        }
+
+        if (startDate.HasValue)
+        {
+            query = query.Where(p => p.PaymentDate >= startDate.Value.Date);
+        }
+
+        if (endDate.HasValue)
+        {
+            query = query.Where(p => p.PaymentDate <= endDate.Value.Date.AddDays(1));
+        }
+
+        // Aplicar ordenação
+        if (!string.IsNullOrEmpty(sortColumn))
+        {
+            query = sortColumn switch
+            {
+                "CustomerName" =>
+                    sortDirection?.ToLower() == "desc"
+                        ? query.OrderByDescending(p => p.Order.Customer.Name)
+                        : query.OrderBy(p => p.Order.Customer.Name),
+                _ => sortDirection?.ToLower() == "desc"
+                    ? query.OrderByDescending(p => EF.Property<object>(p, sortColumn))
+                    : query.OrderBy(p => EF.Property<object>(p, sortColumn))
+            };
+        }
+
+        // Projeção para PaymentResponse sem paginação
+        return await query
+            .Select(payment => new PaymentResponse(
+                payment.Id,
+                payment.Order.Id,
+                payment.Order.Customer.Id,
+                payment.Order.Customer.Name,
+                payment.Amount,
+                payment.PaymentDate,
+                payment.PaymentMethod.ToString(),
+                payment.CreatedAt,
+                payment.UpdatedAt
+            ))
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<PaymentResponse>> GetAllPaginatedPaymentsAsync(
         int page,
         int pageSize,
         Guid? customerId,
@@ -93,7 +149,7 @@ public class PaymentRepository(AppDbContext appDbContext) : IPaymentRepository
     }
 
 
-    public async Task<int> GetAllPaymentsWithFiltersCountAsync(Guid? customerId, DateTime? startDate,
+    public async Task<int> GetTotalPaginatedPaymentsAsync(Guid? customerId, DateTime? startDate,
         DateTime? endDate)
     {
         var query = appDbContext.Payments.AsQueryable();

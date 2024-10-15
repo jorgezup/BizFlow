@@ -36,8 +36,81 @@ public class OrderRepository(AppDbContext appDbContext) : IOrderRepository
             ))
             .FirstOrDefaultAsync();
     }
+    
+    public async Task<IEnumerable<OrderResponse>> GetAllOrdersAsync(
+        Guid? customerId,
+        string status,
+        DateTime? startDate,
+        DateTime? endDate,
+        string? sortColumn,
+        string? sortDirection)
+    {
+        var query = appDbContext.Orders.AsQueryable();
 
-    public async Task<IEnumerable<OrderResponse>> GetAllOrdersWithFiltersAsync(
+        // Aplicar filtros
+        if (customerId.HasValue)
+        {
+            query = query.Where(o => o.CustomerId == customerId.Value);
+        }
+
+        if (!string.IsNullOrEmpty(status))
+        {
+            if (Enum.TryParse(typeof(Status), status, out var parsedStatus))
+            {
+                query = query.Where(o => o.OrderLifeCycle
+                    .OrderByDescending(olc => olc.CreatedAt)
+                    .FirstOrDefault().Status == (Status)parsedStatus);
+            }
+        }
+
+        if (startDate.HasValue)
+        {
+            query = query.Where(o => o.CreatedAt >= startDate.Value.Date);
+        }
+
+        if (endDate.HasValue)
+        {
+            query = query.Where(o => o.CreatedAt <= endDate.Value.Date.AddDays(1));
+        }
+
+        // Aplicar ordenação
+        if (!string.IsNullOrEmpty(sortColumn))
+        {
+            query = sortColumn switch
+            {
+                "CustomerName" =>
+                    sortDirection?.ToLower() == "desc"
+                        ? query.OrderByDescending(o => o.Customer.Name)
+                        : query.OrderBy(o => o.Customer.Name),
+                _ => sortDirection?.ToLower() == "desc"
+                    ? query.OrderByDescending(o => EF.Property<object>(o, sortColumn))
+                    : query.OrderBy(o => EF.Property<object>(o, sortColumn))
+            };
+        }
+
+        // Projeção para OrderResponse sem paginação
+        return await query
+            .Select(order => new OrderResponse(
+                order.Id,
+                order.CustomerId,
+                order.Customer.Name,
+                order.OrderDate,
+                order.OrderDetails.Sum(od => od.Subtotal),
+                order.OrderDetails.Select(od => od.Product.Name).ToList(),
+                order.OrderDetails.Select(od => od.Quantity).ToList(),
+                order.OrderDetails.Select(od => od.UnitPrice).ToList(),
+                order.OrderDetails.Select(od => od.Subtotal).ToList(),
+                order.Generated,
+                order.OrderLifeCycle.OrderByDescending(olc => olc.CreatedAt).FirstOrDefault().Status,
+                order.Payment.PaymentMethod.ToString(),
+                order.CreatedAt,
+                order.UpdatedAt
+            ))
+            .ToListAsync();
+    }
+
+
+    public async Task<IEnumerable<OrderResponse>> GetAllPaginatedOrdersAsync(
         int page,
         int pageSize,
         Guid? customerId,
@@ -103,8 +176,7 @@ public class OrderRepository(AppDbContext appDbContext) : IOrderRepository
         return result;
     }
 
-
-    public async Task<int> GetTotalOrdersWithFiltersCountAsync(
+    public async Task<int> GetTotalPaginatedOrdersAsync(
         Guid? customerId,
         string? status,
         DateTime? startDate,

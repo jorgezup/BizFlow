@@ -4,6 +4,7 @@ using Application.UseCases.Order.Update;
 using Asp.Versioning;
 using Infrastructure;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
@@ -36,12 +37,19 @@ public abstract class Program
                         services.AddDbContext<AppDbContext>(options =>
                             options.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection")));
 
-
                         services.AddControllers()
                             .AddJsonOptions(options =>
                             {
                                 options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                             });
+
+                        // Configuração dos Health Checks
+                        services.AddHealthChecks()
+                            .AddSqlServer(
+                                context.Configuration.GetConnectionString("DefaultConnection"),
+                                name: "Banco de Dados SQL",
+                                timeout: TimeSpan.FromSeconds(30),
+                                tags: ["db", "sql", "sqlserver"]);
 
                         services.AddApiVersioning(options =>
                         {
@@ -59,7 +67,6 @@ public abstract class Program
                             options.AddPolicy(name: MyAllowSpecificOrigins,
                                 policy =>
                                 {
-                                    // policy.WithOrigins("http://localhost:3000")
                                     policy.AllowAnyOrigin()
                                         .AllowAnyHeader()
                                         .AllowAnyMethod();
@@ -79,7 +86,6 @@ public abstract class Program
                         services.AddInfrastructureServices();
                         services.AddApplicationServices();
 
-                        // if (context.HostingEnvironment.IsDevelopment())
                         services.AddSwaggerGen(c =>
                         {
                             c.SwaggerDoc("v1", new OpenApiInfo { Title = "BizFlow API", Version = "v1" });
@@ -90,9 +96,30 @@ public abstract class Program
                         app.UseCors(MyAllowSpecificOrigins);
 
                         app.UseRouting();
-                        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-                        // if (!app.ApplicationServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment()) return;
+                        app.UseEndpoints(endpoints =>
+                        {
+                            endpoints.MapControllers();
+                            endpoints.MapHealthChecks("/health", new HealthCheckOptions
+                            {
+                                ResponseWriter = async (context, report) =>
+                                {
+                                    var result = JsonSerializer.Serialize(new
+                                    {
+                                        status = report.Status.ToString(),
+                                        checks = report.Entries.Select(entry => new
+                                        {
+                                            name = entry.Key,
+                                            status = entry.Value.Status.ToString(),
+                                            exception = entry.Value.Exception?.Message,
+                                            duration = entry.Value.Duration.ToString()
+                                        })
+                                    });
+                                    context.Response.ContentType = "application/json";
+                                    await context.Response.WriteAsync(result);
+                                }
+                            });
+                        });
 
                         app.UseSwagger();
                         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BizFlow v1"));

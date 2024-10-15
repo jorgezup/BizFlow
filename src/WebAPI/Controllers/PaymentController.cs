@@ -123,11 +123,11 @@ public class PaymentController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetPendingPayments([FromQuery] Guid? customerId, [FromQuery] DateTime? startDate,
-        [FromQuery] DateTime? endDate, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        [FromQuery] DateTime? endDate)
     {
         try
         {
-            var result = await getPendingPaymentsUseCase.ExecuteAsync(customerId, startDate, endDate, page, pageSize);
+            var result = await getPendingPaymentsUseCase.ExecuteAsync(customerId, startDate, endDate);
             return Ok(result);
         }
         catch (BadRequestException e)
