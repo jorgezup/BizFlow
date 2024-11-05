@@ -9,7 +9,7 @@ env:
 on:
   push:
     branches:
-      - master
+      - develop
   workflow_dispatch:
 
 jobs:
