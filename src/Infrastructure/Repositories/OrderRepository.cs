@@ -65,12 +65,12 @@ public class OrderRepository(AppDbContext appDbContext) : IOrderRepository
 
         if (startDate.HasValue)
         {
-            query = query.Where(o => o.CreatedAt >= startDate.Value.Date);
+            query = query.Where(o => o.OrderDate >= startDate.Value.Date);
         }
 
         if (endDate.HasValue)
         {
-            query = query.Where(o => o.CreatedAt <= endDate.Value.Date.AddDays(1));
+            query = query.Where(o => o.OrderDate <= endDate.Value.Date.AddDays(1));
         }
 
         // Aplicar ordenação
@@ -86,6 +86,10 @@ public class OrderRepository(AppDbContext appDbContext) : IOrderRepository
                     ? query.OrderByDescending(o => EF.Property<object>(o, sortColumn))
                     : query.OrderBy(o => EF.Property<object>(o, sortColumn))
             };
+        }
+        else
+        {
+            query = query.OrderByDescending(o => o.OrderDate);
         }
 
         // Projeção para OrderResponse sem paginação

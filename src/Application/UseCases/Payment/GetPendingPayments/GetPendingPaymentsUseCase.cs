@@ -1,8 +1,9 @@
 using Application.DTOs.Payment;
-using Application.UseCases.Payment.GetPendingPayments;
 using Core.DTOs;
 using Core.Enums;
 using Core.Interfaces;
+
+namespace Application.UseCases.Payment.GetPendingPayments;
 
 public class GetPendingPaymentsUseCase(IUnitOfWork unitOfWork) : IGetPendingPaymentsUseCase
 {
