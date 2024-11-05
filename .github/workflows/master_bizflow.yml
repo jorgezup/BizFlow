@@ -1,10 +1,7 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
 name: Build and deploy ASP.Net Core app to Azure Web App - bizflow
-
-
-env:
-  AZURE_WEBAPP_NAME: 'bizflow'   # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '8.0.x'                 # set this to the .NET Core version to use
 
 on:
   push:
@@ -14,15 +11,16 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up .NET Core
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          dotnet-version: '8.x'
+          include-prerelease: true
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
@@ -31,21 +29,21 @@ jobs:
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: build
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
+
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: .net-app
 
@@ -53,10 +51,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_34CD127175AC47559BA1671085AD6455 }}
-          
-      - name: Check App is Running
-        timeout-minutes: 2
-        run: curl -sSf ${{ steps.deploy-to-webapp.outputs.webapp-url }}/api/v1.0/customers          
+          app-name: 'bizflow'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5B4F0B4B219E44D3B18093F613867289 }}
+          package: .
